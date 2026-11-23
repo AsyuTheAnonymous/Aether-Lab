@@ -41,7 +41,8 @@
     return { size: 16, lines: wrapLines(ctx, title, 212, 4) };
   }
 
-  const SPEC = ['#5ef2ff', '#8fb4ff', '#c49bff', '#ff8fd8', '#ffd29a', '#8affc8'];
+  // brand spectrum (same as --c1…--c6 in style.css)
+  const SPEC = ['#3cf2ff', '#2aa8ff', '#6f6bff', '#9a4dff', '#d35bff', '#f08cff'];
 
   function seeded(str) {
     let seed = 0;
@@ -50,24 +51,51 @@
   }
 
   /** The lab's crystal mark, drawn as facets. */
+  function flare(ctx, x, y, r) {
+    const g = ctx.createRadialGradient(x, y, 0, x, y, r * 0.5);
+    g.addColorStop(0, 'rgba(255,255,255,1)');
+    g.addColorStop(1, 'rgba(211,91,255,0)');
+    ctx.fillStyle = g;
+    ctx.fillRect(x - r, y - r, r * 2, r * 2);
+    ctx.fillStyle = 'rgba(255,255,255,0.95)';
+    ctx.beginPath();
+    ctx.ellipse(x, y, r * 0.07, r, 0, 0, Math.PI * 2);
+    ctx.ellipse(x, y, r, r * 0.07, 0, 0, Math.PI * 2);
+    ctx.fill();
+  }
+
+  /** The Aether Lab crystal: cyan left, violet right, circled by an orbit ring. */
   function crystal(ctx, cx, cy, r, alpha) {
     const top = [cx, cy - r];
-    const right = [cx + r * 0.8, cy - r * 0.1];
     const bottom = [cx, cy + r];
-    const left = [cx - r * 0.8, cy - r * 0.1];
-    const mid = [cx - r * 0.15, cy + r * 0.1];
+    const left = [cx - r * 0.68, cy];
+    const right = [cx + r * 0.68, cy];
+    const mid = [cx + r * 0.04, cy];
     const facets = [
-      [top, left, mid, '#5ef2ff'],
-      [top, mid, right, '#ff8fd8'],
-      [left, mid, bottom, '#8affc8'],
-      [mid, right, bottom, '#ffd29a'],
+      [top, left, mid, '#7ffcff', '#1fb8ff'],
+      [left, bottom, mid, '#22c8ff', '#2a5bff'],
+      [top, mid, right, '#c16bff', '#7a1ee8'],
+      [mid, bottom, right, '#9a3dff', '#3d0a9a'],
     ];
+    const ring = (from, to, width, a) => {
+      const g = ctx.createLinearGradient(cx - r * 1.5, 0, cx + r * 1.5, 0);
+      g.addColorStop(0, 'rgba(60,242,255,' + a + ')');
+      g.addColorStop(0.5, 'rgba(42,168,255,' + a + ')');
+      g.addColorStop(1, 'rgba(211,91,255,' + a + ')');
+      ctx.strokeStyle = g;
+      ctx.lineWidth = width;
+      ctx.beginPath();
+      ctx.ellipse(cx, cy + r * 0.08, r * 1.5, r * 0.36, -0.3, from, to);
+      ctx.stroke();
+    };
     ctx.save();
     ctx.globalAlpha = alpha;
-    for (const [a, b, c, col] of facets) {
+    ctx.lineCap = 'round';
+    ring(Math.PI, Math.PI * 2, 1.2, 0.45); // far half, behind the crystal
+    for (const [a, b, c, c0, c1] of facets) {
       const g = ctx.createLinearGradient(a[0], a[1], c[0], c[1]);
-      g.addColorStop(0, col);
-      g.addColorStop(1, 'rgba(255,255,255,0.15)');
+      g.addColorStop(0, c0);
+      g.addColorStop(1, c1);
       ctx.fillStyle = g;
       ctx.beginPath();
       ctx.moveTo(a[0], a[1]);
@@ -76,8 +104,8 @@
       ctx.closePath();
       ctx.fill();
     }
-    ctx.strokeStyle = 'rgba(255,255,255,0.9)';
-    ctx.lineWidth = 1.4;
+    ctx.strokeStyle = 'rgba(255,255,255,0.85)';
+    ctx.lineWidth = 1.2;
     ctx.lineJoin = 'round';
     ctx.beginPath();
     ctx.moveTo(top[0], top[1]);
@@ -86,12 +114,15 @@
     ctx.lineTo(left[0], left[1]);
     ctx.closePath();
     ctx.moveTo(left[0], left[1]);
-    ctx.lineTo(mid[0], mid[1]);
     ctx.lineTo(right[0], right[1]);
     ctx.moveTo(top[0], top[1]);
     ctx.lineTo(mid[0], mid[1]);
     ctx.lineTo(bottom[0], bottom[1]);
     ctx.stroke();
+    ring(0, Math.PI, 2.6, 0.95); // near half, in front
+    ctx.globalCompositeOperation = 'lighter';
+    flare(ctx, mid[0], mid[1], r * 0.42);
+    flare(ctx, cx + r * 1.38, cy - r * 0.38, r * 0.3);
     ctx.restore();
   }
 
@@ -159,8 +190,8 @@
       ctx.fillStyle = '#07061a';
       ctx.fillRect(0, 0, SIZE, SIZE);
       const halo = ctx.createRadialGradient(128, 56, 4, 128, 56, 220);
-      halo.addColorStop(0, 'rgba(196,155,255,0.55)');
-      halo.addColorStop(1, 'rgba(196,155,255,0)');
+      halo.addColorStop(0, 'rgba(154,77,255,0.55)');
+      halo.addColorStop(1, 'rgba(154,77,255,0)');
       ctx.fillStyle = halo;
       ctx.fillRect(0, 0, SIZE, SIZE);
       ctx.globalCompositeOperation = 'lighter';
@@ -191,7 +222,7 @@
     }
     ctx.globalAlpha = 1;
 
-    crystal(ctx, 128, 58, 30, 0.95);
+    crystal(ctx, 128, 58, 33, 1);
 
     // title
     ctx.textAlign = 'center';
@@ -203,9 +234,9 @@
     let y = 152 - blockH / 2 + fit.size * 0.78;
     const tg = ctx.createLinearGradient(30, 0, 226, 0);
     tg.addColorStop(0, '#ffffff');
-    tg.addColorStop(0.5, '#efe6ff');
+    tg.addColorStop(0.5, '#dfe8ff');
     tg.addColorStop(1, '#ffffff');
-    ctx.shadowColor = 'rgba(196,155,255,0.9)';
+    ctx.shadowColor = 'rgba(154,77,255,0.9)';
     ctx.shadowBlur = 14;
     ctx.fillStyle = tg;
     for (const line of fit.lines) {
@@ -221,9 +252,9 @@
       const w = Math.min(224, ctx.measureText(label).width + 26);
       const x0 = 128 - w / 2;
       const bg = ctx.createLinearGradient(x0, 0, x0 + w, 0);
-      bg.addColorStop(0, 'rgba(94,242,255,0.9)');
-      bg.addColorStop(0.5, 'rgba(196,155,255,0.9)');
-      bg.addColorStop(1, 'rgba(255,143,216,0.9)');
+      bg.addColorStop(0, 'rgba(60,242,255,0.9)');
+      bg.addColorStop(0.5, 'rgba(154,77,255,0.9)');
+      bg.addColorStop(1, 'rgba(211,91,255,0.9)');
       ctx.fillStyle = 'rgba(7,6,26,0.78)';
       roundRect(ctx, x0, 214, w, 24, 12);
       ctx.fill();
