@@ -16,23 +16,27 @@
   const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
   const fine = window.matchMedia('(pointer: fine)').matches;
   const small = () => window.innerWidth < 640;
+  // The brand spectrum (same as --c1…--c6 in style.css): cyan through magenta, from the logo.
   const SPEC = [
-    [94, 242, 255],
-    [143, 180, 255],
-    [196, 155, 255],
-    [255, 143, 216],
-    [255, 210, 154],
-    [138, 255, 200],
+    [60, 242, 255],
+    [42, 168, 255],
+    [111, 107, 255],
+    [154, 77, 255],
+    [211, 91, 255],
+    [240, 140, 255],
   ];
-  // deeper, more saturated cousins of the UI spectrum for the aurora (so no CSS filter is needed)
+  // deeper, more saturated cousins of the spectrum for the aurora (so no CSS filter is needed)
   const VIVID = [
-    [0, 224, 255],
-    [96, 128, 255],
-    [168, 96, 255],
-    [255, 72, 196],
-    [255, 176, 96],
-    [40, 255, 170],
+    [0, 229, 255],
+    [0, 132, 255],
+    [72, 64, 255],
+    [132, 38, 255],
+    [196, 40, 255],
+    [0, 190, 255],
   ];
+  const CYAN = SPEC[0];
+  const VIOLET = SPEC[3];
+  const MAGENTA = SPEC[4];
   const rgba = (c, a) => 'rgba(' + c[0] + ',' + c[1] + ',' + c[2] + ',' + a + ')';
   const mix = (a, b, t) => [a[0] + (b[0] - a[0]) * t, a[1] + (b[1] - a[1]) * t, a[2] + (b[2] - a[2]) * t].map(Math.round);
   const specAt = (p, pal) => {
@@ -126,6 +130,23 @@
       g.fillRect(0, 0, 48, 48);
       return s;
     });
+    // four-point flare, like the sparks on the logo's crystal and ring
+    const star = document.createElement('canvas');
+    star.width = star.height = 64;
+    const g = star.getContext('2d');
+    const core = g.createRadialGradient(32, 32, 0, 32, 32, 14);
+    core.addColorStop(0, 'rgba(255,255,255,1)');
+    core.addColorStop(0.35, 'rgba(230,200,255,0.55)');
+    core.addColorStop(1, 'rgba(211,91,255,0)');
+    g.fillStyle = core;
+    g.fillRect(0, 0, 64, 64);
+    g.fillStyle = 'rgba(255,255,255,0.95)';
+    for (const [w, h] of [[2.2, 30], [30, 2.2]]) {
+      g.beginPath();
+      g.ellipse(32, 32, w, h, 0, 0, Math.PI * 2);
+      g.fill();
+    }
+    field.star = star;
   }
 
   function sizeField() {
@@ -151,64 +172,132 @@
     };
   }
 
-  // icosahedron
-  const PHI = (1 + Math.sqrt(5)) / 2;
-  const ICO_V = [
-    [-1, PHI, 0], [1, PHI, 0], [-1, -PHI, 0], [1, -PHI, 0],
-    [0, -1, PHI], [0, 1, PHI], [0, -1, -PHI], [0, 1, -PHI],
-    [PHI, 0, -1], [PHI, 0, 1], [-PHI, 0, -1], [-PHI, 0, 1],
-  ].map((v) => v.map((n) => n / Math.sqrt(1 + PHI * PHI)));
-  const ICO_E = [];
-  for (let a = 0; a < 12; a++) {
-    for (let b = a + 1; b < 12; b++) {
-      const d = Math.hypot(ICO_V[a][0] - ICO_V[b][0], ICO_V[a][1] - ICO_V[b][1], ICO_V[a][2] - ICO_V[b][2]);
-      if (d < 1.1) ICO_E.push([a, b]);
-    }
-  }
+  /*
+   * The logo's crystal: an elongated square bipyramid, cyan on its left
+   * faces and violet on its right, circled by a tilted orbit ring.
+   */
+  const CRYSTAL_V = [
+    [0, -1.45, 0], // top
+    [0, 1.45, 0], // bottom
+    [1, 0, 0], [0, 0, 1], [-1, 0, 0], [0, 0, -1], // equator
+  ];
+  const CRYSTAL_F = [
+    [0, 2, 3], [0, 3, 4], [0, 4, 5], [0, 5, 2],
+    [1, 3, 2], [1, 4, 3], [1, 5, 4], [1, 2, 5],
+  ];
+  const CRYSTAL_E = [[0, 2], [0, 3], [0, 4], [0, 5], [1, 2], [1, 3], [1, 4], [1, 5], [2, 3], [3, 4], [4, 5], [5, 2]];
+  const RING_N = 72;
 
   function drawCrystal(ctx, t) {
     const mobile = small();
-    const size = mobile ? Math.min(field.w * 0.22, 96) : Math.min(field.w, field.h) * 0.2;
-    const cx = (mobile ? field.w * 0.82 : field.w * 0.84) + pointer.nx * 14;
-    const cy = (mobile ? 150 : field.h * 0.26) - window.scrollY * 0.12 + pointer.ny * 10;
-    if (cy < -size * 2) return;
-    const ay = t * 0.22 + pointer.nx * 0.4;
-    const ax = t * 0.13 + pointer.ny * 0.3;
-    const pts = ICO_V.map(([x, y, z]) => {
-      let x1 = x * Math.cos(ay) + z * Math.sin(ay);
-      let z1 = -x * Math.sin(ay) + z * Math.cos(ay);
-      let y1 = y * Math.cos(ax) - z1 * Math.sin(ax);
+    // Narrow screens: beside the brand lockup, clear of the text. Wide: right of the station title.
+    const compact = field.w < 900;
+    const size = mobile ? Math.min(field.w * 0.07, 28) : compact ? 32 : Math.min(field.w * 0.065, field.h * 0.1, 96);
+    const cx = (mobile ? field.w * 0.82 : compact ? field.w * 0.84 : field.w * 0.83) + pointer.nx * 14;
+    const cy = (compact ? 62 : Math.max(field.h * 0.36, size * 2.2 + 150)) - window.scrollY * 0.12 + pointer.ny * 10;
+    if (cy < -size * 3) return;
+    const ay = t * 0.32 + pointer.nx * 0.5; // spin about the vertical axis
+    const ax = 0.16 + Math.sin(t * 0.4) * 0.05 + pointer.ny * 0.12; // gentle forward tilt
+    const project = ([x, y, z]) => {
+      const x1 = x * Math.cos(ay) + z * Math.sin(ay);
+      const z1 = -x * Math.sin(ay) + z * Math.cos(ay);
+      const y1 = y * Math.cos(ax) - z1 * Math.sin(ax);
       const z2 = y * Math.sin(ax) + z1 * Math.cos(ax);
-      const persp = 2.6 / (2.6 + z2);
+      const persp = 3 / (3 + z2);
       return [cx + x1 * size * persp, cy + y1 * size * persp, z2];
-    });
+    };
+    const pts = CRYSTAL_V.map(project);
+
+    // orbit ring: a circle tilted towards the viewer and rising to the right, as in the logo
+    const R = 2.05;
+    const tilt = 0.3 + Math.sin(t * 0.25) * 0.04;
+    const roll = -0.3;
+    const ring = [];
+    for (let k = 0; k <= RING_N; k++) {
+      const th = (k / RING_N) * Math.PI * 2;
+      const x = R * Math.cos(th);
+      const y = -R * Math.sin(th) * Math.sin(tilt); // the near half dips below the crystal's middle
+      const z = R * Math.sin(th) * Math.cos(tilt);
+      ring.push([cx + (x * Math.cos(roll) - y * Math.sin(roll)) * size, cy + (x * Math.sin(roll) + y * Math.cos(roll)) * size, z]);
+    }
+    const ringColor = (px) => {
+      const u = Math.max(0, Math.min(1, (px - cx) / (R * size * 2) + 0.5));
+      return u < 0.5 ? mix(CYAN, SPEC[1], u * 2) : mix(SPEC[1], MAGENTA, (u - 0.5) * 2);
+    };
+    const drawRing = (front) => {
+      for (let k = 0; k < RING_N; k++) {
+        const a = ring[k];
+        const b = ring[k + 1];
+        if ((a[2] + b[2] < 0) !== front) continue;
+        ctx.strokeStyle = rgba(ringColor(a[0]), front ? 0.85 : 0.28);
+        ctx.lineWidth = (front ? 2.6 : 1.1) * (mobile ? 0.7 : 1);
+        ctx.beginPath();
+        ctx.moveTo(a[0], a[1]);
+        ctx.lineTo(b[0], b[1]);
+        ctx.stroke();
+      }
+    };
+
     ctx.globalCompositeOperation = 'lighter';
-    // inner glow
-    const glow = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 1.6);
-    glow.addColorStop(0, rgba(specAt(t * 0.03), 0.16));
-    glow.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = glow;
-    ctx.fillRect(cx - size * 1.6, cy - size * 1.6, size * 3.2, size * 3.2);
-    ctx.lineWidth = mobile ? 0.8 : 1;
-    for (const [a, b] of ICO_E) {
+    ctx.lineCap = 'round';
+    // halo: cyan on the left, violet on the right
+    const halo = ctx.createRadialGradient(cx, cy, 0, cx, cy, size * 2.4);
+    halo.addColorStop(0, rgba(mix(CYAN, VIOLET, 0.5 + Math.sin(t * 0.3) * 0.2), 0.16));
+    halo.addColorStop(1, 'rgba(0,0,0,0)');
+    ctx.fillStyle = halo;
+    ctx.fillRect(cx - size * 2.4, cy - size * 2.4, size * 4.8, size * 4.8);
+
+    drawRing(false);
+
+    // faces: lit by which way they face, tinted by where they sit
+    for (const [a, b, c] of CRYSTAL_F) {
+      const A = pts[a], B = pts[b], C = pts[c];
+      const facing = (B[0] - A[0]) * (C[1] - A[1]) - (B[1] - A[1]) * (C[0] - A[0]);
+      const front = facing < 0;
+      const mx = (A[0] + B[0] + C[0]) / 3;
+      const u = Math.max(0, Math.min(1, (mx - cx) / (size * 0.8) + 0.5));
+      const col = u < 0.5 ? mix(CYAN, SPEC[1], u * 2) : mix(VIOLET, MAGENTA, (u - 0.5) * 0.6);
+      const g = ctx.createLinearGradient(A[0], A[1], (B[0] + C[0]) / 2, (B[1] + C[1]) / 2);
+      g.addColorStop(0, rgba(mix(col, [255, 255, 255], 0.12), front ? 0.42 : 0.08));
+      g.addColorStop(1, rgba(col, front ? 0.16 : 0.03));
+      ctx.fillStyle = g;
+      ctx.beginPath();
+      ctx.moveTo(A[0], A[1]);
+      ctx.lineTo(B[0], B[1]);
+      ctx.lineTo(C[0], C[1]);
+      ctx.closePath();
+      ctx.fill();
+    }
+    // edges
+    ctx.lineWidth = mobile ? 0.9 : 1.2;
+    for (const [a, b] of CRYSTAL_E) {
       const pa = pts[a];
       const pb = pts[b];
       const depth = (pa[2] + pb[2]) / 2; // -1 (front) .. 1 (back)
       const g = ctx.createLinearGradient(pa[0], pa[1], pb[0], pb[1]);
-      g.addColorStop(0, rgba(specAt(t * 0.02 + a / 12), 0.55 - depth * 0.3));
-      g.addColorStop(1, rgba(specAt(t * 0.02 + b / 12), 0.55 - depth * 0.3));
+      const ca = mix(CYAN, VIOLET, Math.max(0, Math.min(1, (pa[0] - cx) / (size * 1.6) + 0.5)));
+      const cb = mix(CYAN, VIOLET, Math.max(0, Math.min(1, (pb[0] - cx) / (size * 1.6) + 0.5)));
+      g.addColorStop(0, rgba(mix(ca, [255, 255, 255], 0.45), 0.8 - depth * 0.4));
+      g.addColorStop(1, rgba(mix(cb, [255, 255, 255], 0.45), 0.8 - depth * 0.4));
       ctx.strokeStyle = g;
       ctx.beginPath();
       ctx.moveTo(pa[0], pa[1]);
       ctx.lineTo(pb[0], pb[1]);
       ctx.stroke();
     }
-    for (let i = 0; i < pts.length; i++) {
-      const p = pts[i];
-      const s = (mobile ? 10 : 14) * (1.2 - p[2] * 0.5);
-      ctx.globalAlpha = 0.8 - p[2] * 0.4;
-      ctx.drawImage(field.sprites[i % SPEC.length], p[0] - s / 2, p[1] - s / 2, s, s);
-    }
+
+    drawRing(true);
+
+    // flares: one pulsing at the crystal's heart, one riding the ring
+    const pulse = 0.75 + 0.25 * Math.sin(t * 1.7);
+    let s = size * (mobile ? 0.9 : 0.8) * pulse;
+    ctx.globalAlpha = 0.85;
+    ctx.drawImage(field.star, cx - s / 2, cy - s / 2, s, s);
+    const k = Math.floor((((t * 0.08) % 1) + 1) % 1 * RING_N);
+    const p = ring[k];
+    s = size * (p[2] < 0 ? 0.75 : 0.4);
+    ctx.globalAlpha = p[2] < 0 ? 0.95 : 0.35;
+    ctx.drawImage(field.star, p[0] - s / 2, p[1] - s / 2, s, s);
     ctx.globalAlpha = 1;
   }
 

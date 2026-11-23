@@ -37,7 +37,17 @@
     window.scrollTo({ top: 0, behavior: 'instant' });
   }
 
+  /** "Add to Home Screen" details. Only over HTTP(S): from file:// the browser refuses the manifest and logs an error. */
+  function linkManifest() {
+    if (!/^https?:$/.test(location.protocol) || $('link[rel="manifest"]')) return;
+    const link = document.createElement('link');
+    link.rel = 'manifest';
+    link.href = 'manifest.webmanifest';
+    document.head.appendChild(link);
+  }
+
   function init() {
+    linkManifest();
     TABS = $$('.tab').map((tab) => tab.dataset.tab);
     numberStations();
     $$('.tab').forEach((tab) => {
