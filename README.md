@@ -142,6 +142,6 @@ Full notices: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
 ## License and disclaimer
 
-Aether Lab is released under the [MIT License](LICENSE). Built by Ashton Geer / [Silvea Technologies](https://silvea.tech).
+Aether Lab is released under the [MIT License](LICENSE). The bundled fonts (SIL OFL 1.1) and forwarder ExeFS (ISC) keep their own licences; see [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md). Built by Ashton Geer / [Silvea Technologies](https://silvea.tech).
 
 Aether Lab contains no ROMs, BIOS files, keys or other copyrighted game data, and isn't affiliated with Nintendo, Sega, Sony or any game publisher. Use it with games and keys you own.
