@@ -23,3 +23,10 @@ Options -Indexes
 # RewriteEngine On
 # RewriteCond %{HTTPS} off
 # RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# The repo also holds docs, tests and a Node server for other hosts.
+# None of that is part of the website, so don't serve it here.
+RedirectMatch 404 ^/(docs|tests|\.github)(/|$)
+<FilesMatch "^(package\.json|server\.js|.*\.md|\.gitignore)$">
+  Require all denied
+</FilesMatch>

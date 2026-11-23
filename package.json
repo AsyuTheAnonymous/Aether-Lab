@@ -1,0 +1,24 @@
+{
+  "name": "aether-lab",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Holographic ROM patch lab (IPS, BPS, UPS, xdelta, PPF, APS) and Nintendo Switch NSP forwarder forge. Static site that runs entirely in the browser.",
+  "license": "MIT",
+  "author": "Ashton Geer (Silvea Technologies)",
+  "homepage": "https://github.com/AsyuTheAnonymous/Aether-Lab#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/AsyuTheAnonymous/Aether-Lab.git"
+  },
+  "bugs": {
+    "url": "https://github.com/AsyuTheAnonymous/Aether-Lab/issues"
+  },
+  "keywords": ["rom-patcher", "romhacking", "ips", "bps", "ups", "xdelta", "ppf", "nintendo-switch", "nsp", "forwarder", "retroarch", "homebrew"],
+  "scripts": {
+    "start": "node server.js",
+    "test": "node tests/run.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

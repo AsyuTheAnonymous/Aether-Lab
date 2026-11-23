@@ -1,3 +1,42 @@
+# OS / editor clutter
 .DS_Store
 Thumbs.db
 *.swp
+.vscode/
+.idea/
+
+# Dependencies (the project has none; this is for the optional fixture tools)
+node_modules/
+
+# Never commit console keys, firmware or game data.
+# Test fixtures are generated from seeds; see docs/testing.md.
+*.keys
+prod.keys
+title.keys
+*.nsp
+*.nsz
+*.xci
+*.nca
+*.nro
+*.sfc
+*.smc
+*.fig
+*.nes
+*.fds
+*.z64
+*.v64
+*.n64
+*.gb
+*.gbc
+*.gba
+*.nds
+*.smd
+*.gen
+*.32x
+*.pce
+*.a78
+*.lnx
+*.iso
+*.cue
+*.chd
+*.bin
