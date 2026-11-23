@@ -1,0 +1,15 @@
+name: Feature request
+description: A new patch format, console, core preset or tool.
+labels: [enhancement]
+body:
+  - type: textarea
+    id: idea
+    attributes:
+      label: What would you like?
+    validations:
+      required: true
+  - type: textarea
+    id: why
+    attributes:
+      label: Why does it help?
+      description: Which hacks, consoles or workflows need it? Links to format specs are gold.

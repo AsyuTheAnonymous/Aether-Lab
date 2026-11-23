@@ -1,69 +1,147 @@
+<div align="center">
+
+<img src="images/logo.svg" width="96" height="96" alt="Aether Lab logo">
+
 # Aether Lab
 
-Holographic ROM patch lab and Switch forwarder forge. It's a static site (HTML/CSS/JS only, no server code) and everything runs in the visitor's browser. The page's security policy (`connect-src 'none'`) blocks every network request, so ROMs, patches and `prod.keys` can't leave the device.
+**A holographic ROM-hack lab that runs entirely in your browser.**
+Apply and create patches for every major console, fix headers and checksums, and forge
+Nintendo Switch NSP forwarders — with nothing uploaded, ever.
 
-## What it does
+[![CI](https://github.com/AsyuTheAnonymous/Aether-Lab/actions/workflows/ci.yml/badge.svg)](https://github.com/AsyuTheAnonymous/Aether-Lab/actions/workflows/ci.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-c49bff.svg)](LICENSE)
+![No build step](https://img.shields.io/badge/build-none%20needed-5ef2ff.svg)
+![Network requests](https://img.shields.io/badge/network%20requests-zero-8affc8.svg)
 
-| Tab | Purpose |
+<!--
+  Deploy on Hostinger button (Hostinger open-source partner program).
+  Replace YOUR_PARTNER_CODE with the code from hPanel, then delete the two comment lines around it.
+[![Deploy on Hostinger](https://assets.hostinger.com/vps/deploy.svg)](https://www.hostinger.com/deploy?template=AsyuTheAnonymous/Aether-Lab&ref=YOUR_PARTNER_CODE)
+-->
+
+<img src="docs/screenshots/patch-station.jpg" alt="Aether Lab's patch station: glass panels over an animated aurora" width="900">
+
+</div>
+
+---
+
+## What's inside
+
+Aether Lab is five "stations" on one static page:
+
+| Station | What it does |
 | --- | --- |
-| **01 Patch** | Applies IPS / IPS32 / EBP, BPS, UPS, xdelta (VCDIFF), PPF v1–3, APS (N64 + GBA). Auto-fixes SNES copier headers, iNES/A78/LNX headers, SMD interleave and N64 byte order. It checks source/target checksums and can repair header checksums (GB/GBC, GBA, SNES, Mega Drive, N64 CRC, NDS). |
-| **02 Create** | Builds BPS, UPS or IPS patches from an original and a modified ROM. It test-applies every patch before offering the download. |
-| **03 Forwarder** | Builds installable NSP forwarders (Goldleaf, DBI, Tinfoil, sphaira…) that launch a RetroArch core with a ROM, or any homebrew `.nro`. Uses the visitor's own `prod.keys` (only `header_key` is needed). |
-| **04 Analyze** | Identifies a ROM and shows its hashes. Can strip or add headers, convert N64 byte order and repair checksums. |
-| **05 Codex** | Short troubleshooting guide. |
+| **01 · Patch** | Applies **IPS, IPS32, EBP, BPS, UPS, xdelta (VCDIFF), PPF v1–3 and APS (N64 & GBA)**. Verifies the source ROM, then quietly fixes the usual reasons patches fail — SNES copier headers, iNES headers, N64 byte order, SMD interleave — and can repair header checksums afterwards. |
+| **02 · Create** | Builds **BPS, UPS or IPS** patches from an original and a modified ROM. Every patch is test-applied before you can download it. |
+| **03 · Forwarder** | Forges **installable NSP forwarders** for a homebrewed Switch: a HOME-menu icon that launches a ROM straight into its RetroArch core, or any homebrew `.nro`. Install with Goldleaf, DBI, Tinfoil or sphaira. |
+| **04 · Analyze** | Identifies 20+ systems from their headers, shows CRC32 / MD5 / SHA-1, checks header checksums, strips or adds headers and converts N64 byte order. |
+| **05 · Codex** | A built-in troubleshooting guide. |
 
-## Folder layout
+<table>
+  <tr>
+    <td width="62%"><img src="docs/screenshots/patch-loaded.jpg" alt="A headered SNES ROM and a BPS patch loaded; the lab spots that removing the header will make the checksums match"></td>
+    <td width="38%"><img src="docs/screenshots/mobile.jpg" alt="Aether Lab on a phone"></td>
+  </tr>
+</table>
+
+### Why another patcher?
+
+- **Private by construction.** The page's Content Security Policy is `connect-src 'none'`: the browser itself refuses every network request, so ROMs, patches and console keys *can't* be uploaded — not by a bug, not by a compromised script.
+- **It fixes the boring failures for you.** Checksummed patches (BPS, UPS, xdelta, APS) say exactly which ROM they want. Aether Lab tries the header and byte-order variants of your ROM until one matches, and tells you what it changed.
+- **Forwarders without a PC toolchain.** No hacBrewPack download, no Python, no Windows-only GUI — the NSP is built in the browser tab with your own `prod.keys`.
+- **No build step, no dependencies.** Plain HTML, CSS and JavaScript. Open `index.html` from disk and it works.
+
+## Quick start
+
+**Use it locally** — download the repo (green **Code** button → *Download ZIP*), unzip, and open `index.html` in Chrome, Edge, Firefox or Safari. That's it.
+
+**Or run the bundled server** (Node.js 20+):
+
+```bash
+npm start            # http://localhost:3000
+```
+
+**Deploy it** — it's a static site, so any web host works. Step-by-step guides for Hostinger (static or Node.js), GitHub Pages and others are in [docs/getting-started.md](docs/getting-started.md).
+
+## Supported formats
+
+| Format | Apply | Create | Verifies source | Notes |
+| --- | :---: | :---: | :---: | --- |
+| **BPS** | ✓ | ✓ | CRC32 | Recommended for sharing hacks. Handles moved/inserted data. |
+| **UPS** | ✓ | ✓ | CRC32 | Reversible — feed it the patched ROM to get the original back. |
+| **IPS / IPS32 / EBP** | ✓ | ✓ (IPS) | — | No checksums. IPS is limited to 16 MB. |
+| **xdelta3 / VCDIFF** | ✓ | — | Adler-32 per window | Patches made with secondary compression (`-S lzma/djw/fgk`) are detected and explained, not decoded. |
+| **PPF v1 / v2 / v3** | ✓ | — | Disc block check, image size | PS1/PS2 disc images. |
+| **APS (N64)** | ✓ | — | Cart ID + header CRC | Byte order converted automatically. |
+| **APS (GBA)** | ✓ | — | CRC16 per 64 KB block | |
+
+RUP, BSDiff and Star Rod patches are recognised and reported as unsupported.
+
+## Supported systems
+
+Header detection and info for NES · Famicom Disk System · SNES · Game Boy · Game Boy Color · Game Boy Advance · Nintendo 64 · Nintendo DS · 3DS · Mega Drive / Genesis · 32X · Sega CD · Saturn · Master System · Game Gear · GameCube · Wii · PlayStation 1/2 · PSP · Atari 7800 · Atari Lynx · PC Engine.
+
+Checksum repair for GB/GBC (header + global), GBA (complement), SNES (internal, with mirroring), Mega Drive, N64 (boot CRC for CIC 6101/6102/6103/6105/6106) and Nintendo DS (header CRC16).
+
+## Switch forwarders
+
+<img src="docs/screenshots/forwarder.jpg" alt="The forwarder station with keys loaded, a RetroArch target and a generated icon" width="900">
+
+You need a Switch running **Atmosphère with up-to-date signature patches**, and `prod.keys` dumped from **your own console** with Lockpick_RCM. The forwarder points at `sdmc:/retroarch/cores/<core>_libretro_libnx.nro` with your ROM's SD path (or at any homebrew `.nro`), and its title ID is derived the same way sphaira does it — so rebuilding a forwarder updates it instead of creating a duplicate.
+
+Everything — requirements, title IDs, icons, installing with Goldleaf and troubleshooting — is in [docs/forwarders.md](docs/forwarders.md).
+
+## Documentation
+
+| Guide | For |
+| --- | --- |
+| [Getting started](docs/getting-started.md) | Running locally and deploying (Hostinger, GitHub Pages, any host) |
+| [Patching](docs/patching.md) | Applying patches, headers, checksums, troubleshooting |
+| [Creating patches](docs/creating-patches.md) | Sharing your own hack |
+| [Forwarders](docs/forwarders.md) | Building and installing NSP forwarders |
+| [Analyze](docs/analyze.md) | The ROM tools station |
+| [Architecture](docs/architecture.md) | How the code is organised; adding formats, consoles and cores |
+| [NSP format notes](docs/nsp-format.md) | How the forwarder NSP is put together, byte by byte |
+| [Design system](docs/design.md) | The holographic look, effects engine and performance rules |
+| [Testing](docs/testing.md) | The test suite and its cross-tool fixtures |
+
+## Project layout
 
 ```
-index.html
-css/        fonts.css, style.css   ← colours, spectrum and radii are variables in :root
-fonts/      self-hosted woff2 (no Google requests)
-images/     logo.svg (also the favicon)
-js/core/    bytes + hashes (CRC32, MD5, SHA-1, SHA-256, Adler-32)
-js/patch/   one file per patch format + engine.js (auto-fix logic)
-js/rom/     console detection, headers, checksum repair, N64 CRC
-js/nsp/     AES, prod.keys parsing, PFS0/RomFS/IVFC, NCA, NACP/NPDM/CNMT, forwarder builder
-js/ui/      one file per tab, DOM/icon helpers, fx.js (all the visual effects)
-js/app.js   tab routing
-licenses/   ISC notice for the forwarder ExeFS, OFL for the fonts (Unbounded, Space Grotesk, JetBrains Mono)
-.htaccess   security headers for Hostinger
+index.html          the whole app (five stations)
+css/                fonts.css, style.css — design tokens live in :root
+js/core/            byte helpers and hashes (CRC32, MD5, SHA-1, SHA-256, Adler-32)
+js/patch/           one file per patch format + engine.js (auto-fix logic)
+js/rom/             console detection, headers, checksums, N64 helpers
+js/nsp/             AES, prod.keys, PFS0/RomFS/IVFC, NCA, NACP/NPDM/CNMT, forwarder builder
+js/ui/              one file per station, DOM helpers, icon generator, fx.js (visual effects)
+fonts/ images/      self-hosted fonts and the logo
+licenses/           licence texts for the fonts and the forwarder ExeFS
+tests/              dependency-free test suite + fixtures made by other tools
+docs/               the guides above
+server.js           optional zero-dependency static server (npm start)
+.htaccess           security headers for Apache / LiteSpeed (Hostinger)
+_headers            the same headers for Netlify / Cloudflare Pages
+.github/            CI workflow, issue and pull request templates
 ```
 
-The scripts are plain `<script>` files that share one global, `VF`, rather than ES modules. That way the site also works if you just double-click `index.html` locally.
+## Contributing
 
-## How the look is built
+Bug reports, new patch formats, console support and core presets are all welcome — see [CONTRIBUTING.md](CONTRIBUTING.md). Please never attach ROMs, disc images or keys to issues or pull requests.
 
-| Effect | Technique | Where |
-| --- | --- | --- |
-| Aurora behind everything | Four wavy ribbons drawn on a canvas about 1/5 of the screen size, softened with a canvas blur, then stretched full-screen. Tiny canvas means it's cheap to redraw | `fx.js` → `drawAurora` |
-| Floating crystal + light motes | A 3D icosahedron rotated and projected in plain JS, plus pre-rendered glow sprites (one per spectrum colour) stamped with `drawImage` | `fx.js` → `drawCrystal`, `drawField` |
-| Spectrum edge on every panel | A `conic-gradient` on `::before`, masked to a 1px ring. The angle is a registered `@property --angle`, so CSS can animate it — it spins on hover | `style.css` → `.card::before` |
-| Light that follows the cursor | JS writes the pointer position into `--mx` / `--my`; a radial gradient in `::after` reads them | `.card::after` + `fx.js` |
-| 3D tilt on drop zones and the icon tile | Same trick with `--tx` / `--ty` fed into `perspective() rotateX() rotateY()` | `.drop`, `.holo-tile` |
-| Foil buttons | Spectrum gradient at 300% width slowly sliding, plus a white sheen that sweeps on hover | `.btn--primary` |
-| Prism-shard bursts on success | A separate canvas above the interface, only drawn while shards exist | `fx.burst()` |
-| Boot sequence | Once per browser session (sessionStorage), click/any key skips | `fx.boot()` |
+Found a security problem? Please report it privately — see [SECURITY.md](SECURITY.md).
 
-Performance guards: everything pauses when the tab is hidden, phones skip the live glass blur, and the canvases stay at 1.25× pixel density or lower. If someone's OS asks for reduced motion, every animation is switched off and the background is drawn once as a still frame.
+## Credits
 
-## Deploying on Hostinger (browser only)
+- Forwarder ExeFS: [nx-hbloader](https://github.com/switchbrew/nx-hbloader) (ISC) with the Forwarder-Mod patches, as built by [TooTallNate/switch-nsp-forwarder](https://github.com/TooTallNate/switch-nsp-forwarder).
+- NSP layout follows [hacBrewPack](https://github.com/The-4n/hacBrewPack); title-ID scheme follows [sphaira](https://github.com/ITotalJustice/sphaira).
+- Fonts: Unbounded, Space Grotesk and JetBrains Mono (SIL Open Font License).
+- Patch fixtures were generated with xdelta3, python-bps and [RomPatcher.js](https://github.com/marcrobledo/RomPatcher.js) to keep us honest.
 
-1. On GitHub, create a repo in the Silvea Technologies org, then **Add file → Upload files** and drag in the *contents* of this folder (keep the folder structure).
-2. Commit to a branch, check it, then merge to `main` when you're ready to go live.
-3. In hPanel, connect the repo to the domain or subdomain (for example `patcher.silvea.tech`). The site root is the repo root.
-4. Turn on **Force HTTPS** for that domain in hPanel. The forge's signing step uses the browser's WebCrypto, which needs HTTPS (or a local file).
+Full notices: [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).
 
-`.htaccess` starts with a dot, so GitHub's uploader may hide it in the file picker. You can still drag it in, or create it with **Add file → Create new file** and paste its contents.
+## License and disclaimer
 
-## Forwarder notes
+Aether Lab is released under the [MIT License](LICENSE). Built by Ashton Geer / [Silvea Technologies](https://silvea.tech).
 
-- The NSP structure mirrors hacBrewPack with `--plaintext --nologo --nopatchnacplogo --titleid`, which is what NTON, nsp-forwarder and similar tools ship.
-- Each build generates a fresh RSA key for NCA signature #2 and writes its modulus into `main.npdm`. Installing still needs Atmosphère with current sigpatches.
-- "Auto" title IDs use sphaira's formula, `SHA-256(nroPath + argv)`, so rebuilding the same forwarder updates the installed one instead of adding a duplicate.
-- To update the forwarder ExeFS later, regenerate `js/nsp/template.js` with the new `main` / `main.npdm` and their SHA-256 values. Every build checks those hashes first.
-
-## Limits
-
-- Everything happens in memory, so about 2 GB is the practical maximum file size.
-- xdelta patches made with secondary compression (`-S lzma/djw/fgk`) are detected and explained, but not decoded.
-- RUP, BDF/BSDiff and PMSR patches are recognised but not supported.
+Aether Lab contains no ROMs, BIOS files, keys or other copyrighted game data, and isn't affiliated with Nintendo, Sega, Sony or any game publisher. Use it with games and keys you own.

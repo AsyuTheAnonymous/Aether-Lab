@@ -1,0 +1,45 @@
+name: Bug report
+description: Something didn't work — a patch failed, a forwarder won't install, the page broke.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for reporting! **Please don't attach ROMs, disc images or keys** — only patches you're allowed to share, screenshots and the details below.
+  - type: dropdown
+    id: area
+    attributes:
+      label: Which station?
+      options: [01 Patch, 02 Create, 03 Forwarder, 04 Analyze, Website / design, Other]
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what you saw instead. Paste any message the page showed.
+    validations:
+      required: true
+  - type: textarea
+    id: details
+    attributes:
+      label: ROM and patch details
+      description: System, ROM size and CRC32 (shown in the page — never the file itself), patch format and where it came from.
+      placeholder: |
+        System: SNES, 1.00 MB, CRC32 a1b2c3d4 (headered .smc)
+        Patch: BPS from <link>
+  - type: textarea
+    id: switch
+    attributes:
+      label: Switch setup (forwarder issues only)
+      placeholder: |
+        Firmware: 21.0.1, Atmosphère 1.x, sigpatches updated <date>
+        Installer: Goldleaf 1.x
+        Core / NRO path:
+  - type: input
+    id: browser
+    attributes:
+      label: Browser and device
+      placeholder: Chrome 131 on Windows 11 / Safari on iPhone 15
+    validations:
+      required: true
