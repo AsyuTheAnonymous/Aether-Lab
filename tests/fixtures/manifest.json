@@ -1,0 +1,129 @@
+[
+  {
+    "file": "xdelta3-adler32.xdelta",
+    "tool": "xdelta3 (python binding, ADLER32 flag)",
+    "source": {
+      "size": 49152,
+      "seed": 11,
+      "n64": false
+    },
+    "target": {
+      "seed": 12,
+      "kinds": [
+        "edits",
+        "insert",
+        "grow"
+      ],
+      "size": 57152,
+      "crc32": "66db5923"
+    }
+  },
+  {
+    "file": "xdelta3-nochecksum.xdelta",
+    "tool": "xdelta3 (python binding, no flags)",
+    "source": {
+      "size": 32768,
+      "seed": 21,
+      "n64": false
+    },
+    "target": {
+      "seed": 22,
+      "kinds": [
+        "edits",
+        "runs"
+      ],
+      "size": 32768,
+      "crc32": "d0013173"
+    }
+  },
+  {
+    "file": "python-bps.bps",
+    "tool": "python-bps 5 (diff_bytearrays, blocksize 64)",
+    "source": {
+      "size": 40960,
+      "seed": 31,
+      "n64": false
+    },
+    "target": {
+      "seed": 32,
+      "kinds": [
+        "edits",
+        "insert"
+      ],
+      "size": 43960,
+      "crc32": "2ec8e28e"
+    }
+  },
+  {
+    "file": "rompatcher.ips",
+    "tool": "RomPatcher.js 3.1.0-b",
+    "source": {
+      "size": 32768,
+      "seed": 41,
+      "n64": false
+    },
+    "target": {
+      "seed": 42,
+      "kinds": [
+        "edits",
+        "runs",
+        "grow"
+      ],
+      "size": 37768,
+      "crc32": "a1d93c02"
+    }
+  },
+  {
+    "file": "rompatcher.ups",
+    "tool": "RomPatcher.js 3.1.0-b",
+    "source": {
+      "size": 32768,
+      "seed": 51,
+      "n64": false
+    },
+    "target": {
+      "seed": 52,
+      "kinds": [
+        "edits",
+        "shrink"
+      ],
+      "size": 31991,
+      "crc32": "7dc1231f"
+    }
+  },
+  {
+    "file": "rompatcher.ppf",
+    "tool": "RomPatcher.js 3.1.0-b (PPF3)",
+    "source": {
+      "size": 32768,
+      "seed": 61,
+      "n64": false
+    },
+    "target": {
+      "seed": 62,
+      "kinds": [
+        "edits"
+      ],
+      "size": 32768,
+      "crc32": "843bed9e"
+    }
+  },
+  {
+    "file": "rompatcher-n64.aps",
+    "tool": "RomPatcher.js 3.1.0-b (APS N64 mode)",
+    "source": {
+      "size": 32768,
+      "seed": 71,
+      "n64": true
+    },
+    "target": {
+      "seed": 72,
+      "kinds": [
+        "edits",
+        "runs"
+      ],
+      "size": 32768,
+      "crc32": "892a04ca"
+    }
+  }
+]
