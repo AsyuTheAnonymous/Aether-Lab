@@ -1,7 +1,7 @@
-# Patching (Station 01)
+# Patching
 
-1. **Sample α — ROM / disc image.** Drop or browse to the clean ROM. The lab identifies the system from its header, shows its internal details and computes CRC32, MD5 and SHA-1.
-2. **Reagent β — Patch.** Drop the patch. The format is read from the file's first bytes (never the extension) and its details are shown. For checksummed formats you see straight away whether your ROM is the right one.
+1. **ROM or disc image.** Drop or browse to the clean ROM. The lab identifies the system from its header, shows its internal details and computes CRC32, MD5 and SHA-1.
+2. **Patch file.** Drop the patch. The format is read from the file's first bytes (never the extension) and its details are shown. For checksummed formats you see straight away whether your ROM is the right one.
 3. **Process settings.** The defaults are right for almost everything.
 4. **Apply patch**, check the results list, then **Download**.
 
@@ -57,7 +57,7 @@ Repairing changes the output's own CRC32, so it will no longer match the "target
 
 ## Checking against a readme
 
-Hack readmes usually list the checksum of the ROM they need. Open **Compare with a checksum from the hack's readme** under Sample α and paste a CRC32, MD5 or SHA-1 — the lab tells you if your dump matches.
+Hack readmes usually list the checksum of the ROM they need. Open **Compare with a checksum from the hack's readme** under the ROM and paste a CRC32, MD5 or SHA-1 — the lab tells you if your dump matches.
 
 ## Troubleshooting
 

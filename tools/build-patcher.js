@@ -60,11 +60,6 @@ function transformHtml(html) {
   if (out.includes(CLOSE)) throw new Error('index.html: ' + CLOSE + ' without a matching ' + OPEN);
   out = out.replace(/[ \t]*<!-- edition:patcher\n([\s\S]*?)\n[ \t]*-->/g, (_, body) => body);
   if (/edition:(switch|patcher)/.test(out)) throw new Error('index.html: an edition marker was left behind');
-  // Renumber the remaining stations 01, 02… (js/app.js does the same at runtime).
-  for (const cls of ['tab__no', 'station-no']) {
-    let n = 0;
-    out = out.replace(new RegExp('<span class="' + cls + '">\\d+</span>', 'g'), () => '<span class="' + cls + '">' + String(++n).padStart(2, '0') + '</span>');
-  }
   return out;
 }
 

@@ -175,7 +175,7 @@
         ['Launches', el('code', null, t.nroPath)],
         ['Arguments', el('code', null, argv)],
         ['Title ID', tid !== null ? FW.tidHex(tid).toUpperCase() : '—'],
-        ['Installs as', ($('#forge-title').value.trim() || '—') + ' · ' + ($('#forge-publisher').value.trim() || 'Aether Lab')],
+        ['Installs as', ($('#forge-title').value.trim() || 'Untitled') + ', by ' + ($('#forge-publisher').value.trim() || 'Aether Lab')],
       ]));
     }
     $('#forge-go').disabled = !!problem;
@@ -210,7 +210,7 @@
         (s) => ($('#forge-hint').textContent = s + '…')
       );
       res.classList.add(out.report.ok ? 'result--ok' : 'result--bad');
-      res.appendChild(el('header', { class: 'card__head' }, el('span', { class: 'tag' }, 'Forged'), el('h2', null, out.report.ok ? 'NSP ready to install' : 'Built, but verification failed')));
+      res.appendChild(el('header', { class: 'card__head' }, el('h2', null, out.report.ok ? 'NSP ready to install' : 'Built, but verification failed')));
       const nameInput = el('input', { type: 'text', value: out.fileName, 'aria-label': 'NSP file name', spellcheck: 'false' });
       const dl = el('button', { class: 'btn btn--ok', type: 'button' }, el('span', null, 'Download NSP'));
       dl.addEventListener('click', () => {
@@ -223,7 +223,7 @@
         ['Title ID', out.titleId],
         ['Size', B.formatSize(out.nsp.length)],
         ['Launches', el('code', null, out.argv)],
-        ['Contents', out.contents.map((c) => c.kind + ' ' + c.id.slice(0, 8) + '…').join(' · ')],
+        ['Contents', out.contents.map((c) => c.kind + ' ' + c.id.slice(0, 8) + '…').join(', ')],
       ]));
       const list = out.report.checks.slice();
       if (!out.signed) list.push({ label: 'Signature #2', ok: null, detail: 'Skipped — open this page over HTTPS so the browser’s crypto is available.' });

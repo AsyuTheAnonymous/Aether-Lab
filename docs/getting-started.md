@@ -62,7 +62,7 @@ Hostinger deploys a branch into an empty folder, so you switch by starting fresh
 1. hPanel → your site → **Git** → delete the existing repository entry.
 2. hPanel → **File Manager** → open the site's folder (`public_html` for the main domain, or the subdomain's own folder) and delete the old Aether Lab files.
 3. Back in **Git**, add the repository again with branch `patcher-site`, then click **Deploy**.
-4. Open the site and hard-refresh. The tab bar should read 01 Patch, 02 Create, 03 Analyze, 04 Codex.
+4. Open the site and hard-refresh. The tab bar should read Patch, Create, Analyze, Codex, with no Forwarder tab.
 
 ### Hostinger — Node.js web app
 

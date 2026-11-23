@@ -34,7 +34,7 @@ VF.patch.register({
   ext: 'bps',
   blurb: 'Shown in the Create station',      // only for formats with create()
   detect(u8) { return true/false },          // magic bytes only — never the file name
-  inspect(u8) {                              // shown in Reagent β
+  inspect(u8) {                              // shown under "Patch file"
     return {
       rows: [['Label', 'value'], …],
       expectedSourceCrc,   // optional: lets the engine pick a ROM variant up front
@@ -56,7 +56,7 @@ Throw `VF.patch.PatchError(message, code)` for anything the user should read. Th
 1. Create `js/patch/<name>.js` implementing the contract above. Use `VF.bytes.Reader` — it throws a clear "truncated or corrupt" error instead of reading past the end.
 2. Add a `<script>` tag in `index.html` (before `js/patch/engine.js`) and the path to `CORE_SCRIPTS` in `tests/lib.js`.
 3. Add tests: a round trip if you implement `create`, and — most valuable — a fixture made by the reference tool for that format (see [testing.md](testing.md)).
-4. Add the extension to the Sample β hint text and the README format table.
+4. Add the extension to the patch drop zone's hint text and the README format table.
 
 ## Console contract
 

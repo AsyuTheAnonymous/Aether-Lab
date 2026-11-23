@@ -36,12 +36,10 @@ module.exports = {
     assert.ok(html.includes('<title>Aether Lab — Holographic ROM Patcher</title>'), 'patcher title un-commented');
   },
 
-  'patcher edition: stations renumbered 01–04 in order'() {
+  'patcher edition: four stations, in order'() {
     const { html } = patcher();
-    const tabs = [...html.matchAll(/<span class="tab__no">(\d+)<\/span>([^<]+)</g)].map((m) => m[1] + ' ' + m[2]);
-    assert.equal(tabs.join(', '), '01 Patch, 02 Create, 03 Analyze, 04 Codex');
-    const kickers = [...html.matchAll(/<span class="station-no">(\d+)<\/span>/g)].map((m) => m[1]);
-    assert.equal(kickers.join(','), '01,02,03,04');
+    const tabs = [...html.matchAll(/<button class="tab"[^>]*data-tab="(\w+)">([^<]+)</g)].map((m) => m[2]);
+    assert.equal(tabs.join(', '), 'Patch, Create, Analyze, Codex');
   },
 
   'patcher edition: scripts are the full list minus the Switch ones, same order'() {

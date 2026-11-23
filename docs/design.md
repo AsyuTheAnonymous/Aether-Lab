@@ -16,7 +16,9 @@ Defined on `:root` in `css/style.css`.
 | `--text`, `--dim`, `--faint` | `#f3f1ff`, `#aeaad6`, `#716d9f` | Body, secondary, tertiary text |
 | `--c1` … `--c6` | cyan `#3cf2ff`, azure `#2aa8ff`, indigo `#6f6bff`, violet `#9a4dff`, magenta `#d35bff`, orchid `#f08cff` | The spectrum, sampled from the logo: every gradient, glow and highlight is drawn from these six |
 | `--chrome` | white → ice blue → lilac | The silver of the logo's AETHER wordmark |
-| `--spectrum`, `--spectrum-conic` | gradients built from `--c1…--c6` | Foil buttons, card edges, wordmark |
+| `--spectrum`, `--spectrum-conic` | gradients built from `--c1…--c6` | Boot bar and rings, the LAB rule lines |
+| `--chrome-edge` | white at the top left → violet at the bottom right | The machined hairline around input panels, as if lit by the crystal |
+| `--t-xs` … `--t-xl` | 13 / 14 / 16 / 18 / 20 px | Type scale for everything below the page headline |
 | `--ok`, `--bad`, `--warn` | mint, rose, peach | Check results, always paired with an icon or word, never colour alone. They're deliberately outside the brand spectrum so a status never looks like decoration |
 | `--display`, `--ui`, `--mono` | Unbounded, Space Grotesk, JetBrains Mono | Headings/wordmark, interface, data (hashes, offsets, IDs) |
 | `--r-lg`, `--r-md`, `--r-sm` | 24 / 14 / 10 px | Card, control, chip radii |
@@ -56,8 +58,9 @@ From back to front:
 
 ## Signature effects
 
-- **Glass cards.** These use `backdrop-filter: blur(22px) saturate(160%)` over the canvases. `.card::before` draws the spectrum edge as a masked ring (`mask-composite: exclude`, and `-webkit-mask-composite: xor` for WebKit). `.card::after` is the moving sheen.
-- **Spinning edges.** `@property --angle` registers an animatable angle, which `--spectrum-conic` uses, so a border can rotate without JavaScript.
+- **Chrome headline.** The station headline is the one loud voice: Unbounded 600 filled with `--chrome`, the same silver as the logo's wordmark, never a single coloured word.
+- **Three surface levels.** Input panels (`.card`) are glass with `backdrop-filter: blur(22px)` and a machined edge drawn by `.card::before` as a masked ring (`mask-composite: exclude`, `-webkit-mask-composite: xor`). Settings (`.card--quiet`) sit back: no blur, a faint edge. Results (`.result`) are lit: a status-coloured edge, a soft glow and a status icon. Don't make every box the same.
+- **Chrome button.** The primary action is polished chrome (`.btn--primary`) lit from above, with the crystal's light beneath it and a single pass of light on hover.
 - **Tilt and highlight.** Drop zones and the icon tile lean toward the pointer through `--tx`/`--ty`; the icon's foil follows `--fx`/`--fy`; each card's highlight follows `--mx`/`--my`. `fx.js` writes these once per `requestAnimationFrame`, and only for fine pointers (mouse, trackpad).
 - **Scan.** `VF.fx.scan(card, true)` sweeps a laser line across a card while a job runs.
 - **Burst.** `VF.fx.burst(el)` throws prism shards from a button when a job succeeds.
@@ -91,17 +94,22 @@ The effects take about 1–2 ms of script per frame on a mid-range laptop. They 
 
 The layout is mobile-first, with breakpoints at 520, 640 and 880 px. Two-column grids (`.grid--2`, `.opts`, `.row2`, `.iconbay`) only split at those widths. Test every change at about 360 px (small phone), 768 px (tablet) and 1440 px (desktop), in portrait and landscape.
 
-## Naming
+## Restraint
 
-The theme vocabulary is used consistently across the interface:
+What keeps it premium is mostly what isn't there:
+
+- **One moving object.** The crystal is the only thing that animates on its own (plus the one-time boot). Everything else moves only in answer to the user: a tab opening, a file dragged over, a job running (scan), a job finishing (burst).
+- **Plain labels.** Sentence case in Space Grotesk. No tracked all-caps eyebrows, no jargon pills. Every panel says what goes in it, with a one-line hint underneath.
+- **Numbers mean order.** Only the forwarder's steps are numbered, because their order matters. The tabs aren't.
+- **Mono is for data.** JetBrains Mono only for hashes, offsets, paths, extensions and title IDs.
+- **No middle-dot strings.** Lists of things are written as sentences or laid out as lists.
+
+## Naming
 
 | UI word | Meaning |
 | --- | --- |
-| Specimen α | The ROM you load |
-| Reagent β | The patch file |
-| Sample α / β | Original and modified ROM in the Create station |
+| Station | One of the tabs (Patch, Create, Forwarder, Analyze, Codex) |
 | Variant | A shape of the same ROM that auto-fix may try (headered, byte-swapped…) |
-| Station | One of the five tabs |
 
 ## Changing the look
 

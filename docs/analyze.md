@@ -1,4 +1,4 @@
-# Analyze (Station 04)
+# Analyze
 
 Drop any ROM or disc image to see:
 

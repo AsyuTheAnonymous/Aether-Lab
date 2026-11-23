@@ -191,7 +191,7 @@
       const main = label.querySelector('.drop__main');
       const sub = label.querySelector('.drop__sub');
       if (main) main.textContent = file.name;
-      if (sub) sub.textContent = VF.bytes.formatSize(file.size) + ' · click to replace';
+      if (sub) sub.textContent = VF.bytes.formatSize(file.size) + ', click to replace';
       label.classList.add('is-reading');
       Promise.resolve()
         .then(() => onFile(file))
