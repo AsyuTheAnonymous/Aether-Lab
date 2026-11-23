@@ -1,4 +1,4 @@
-# NSP forwarders (Station 03)
+# NSP forwarders
 
 A **forwarder** is a tiny installable title that shows up on the Switch HOME menu with its own name and icon. When you launch it, it immediately chain-loads something on your SD card:
 
@@ -21,9 +21,9 @@ Your keys are read into memory in the browser tab and nothing else: not uploaded
 
 ## Building one
 
-**Phase 1 — Keys.** Load `prod.keys`.
+**Step 1 — Your console keys.** Load `prod.keys`.
 
-**Phase 2 — What it launches.**
+**Step 2 — What it launches.**
 
 *RetroArch ROM*
 - **System** and **Core** fill in the core path for you (`sdmc:/retroarch/cores/snes9x_libretro_libnx.nro` and so on). Choose **Custom path…** if your core has a different file name — check `/retroarch/cores/` with a file manager.
@@ -35,11 +35,11 @@ Your keys are read into memory in the browser tab and nothing else: not uploaded
 
 Paths can be typed as `sdmc:/…`, `/…`, or even pasted from a PC (`E:\roms\…`) — they're normalised. Quotes aren't allowed (they'd break the argument string).
 
-**Phase 3 — HOME menu details.** Title, publisher and version as they'll appear on HOME. Leave **Ask for a user profile at launch** off for RetroArch.
+**Step 3 — HOME menu details.** Title, publisher and version as they'll appear on HOME. Leave **Ask for a user profile at launch** off for RetroArch.
 
-**Phase 4 — Icon.** Use a generated icon (Prism, Hologram or Aurora styles, with the system as a badge) or your own image. Images are cropped to fill or fitted, and exported as a 256 × 256 baseline JPEG under 128 KB — larger icons show as "?" on HOME.
+**Step 4 — Icon.** Use a generated icon (Prism, Hologram or Aurora styles, with the system as a badge) or your own image. Images are cropped to fill or fitted, and exported as a 256 × 256 baseline JPEG under 128 KB — larger icons show as "?" on HOME.
 
-**Phase 5 — Crystallize.** The summary shows exactly what will run. **Forge NSP** builds it in a second or two and then re-reads its own output (see below).
+**Step 5 — Forge the NSP.** The summary shows exactly what will run. **Forge NSP** builds it in a second or two and then re-reads its own output (see below).
 
 ## Title IDs
 

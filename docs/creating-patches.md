@@ -1,4 +1,4 @@
-# Creating patches (Station 02)
+# Creating patches
 
 1. **Baseline** — the clean ROM players will have.
 2. **Variant** — your modified build.
@@ -27,6 +27,6 @@ It isn't as tight as Flips' suffix-array mode on worst-case inputs, but it handl
 
 ## Tips for hack authors
 
-- Put the **source CRC32** shown in the results in your readme — players can paste it into Station 01 to check their dump.
+- Put the **source CRC32** shown in the results in your readme — players can paste it into the Patch tab to check their dump.
 - State whether the base ROM is **headered or headerless** (SNES) and its **byte order** (N64). Aether Lab handles both, but other patchers may not.
 - BPS metadata is a good place for title, version and credits; it shows up when someone inspects the patch.

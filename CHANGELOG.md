@@ -11,6 +11,21 @@ Notable changes to Aether Lab are listed here. The format follows [Keep a Change
 - `.nojekyll`, so GitHub Pages can serve the full edition straight from `main`.
 - Deployment guides for both editions, including switching an existing Hostinger site to the patcher edition.
 
+### Changed (design)
+
+- **Premium polish: chrome and light.**
+  - Station headlines are set whole in the logo's chrome.
+  - Input panels get a machined chrome edge lit like the crystal, settings sit back as a quieter surface, and results are lit by their status, with an icon.
+  - The primary button is polished chrome.
+- **Plainer, calmer interface.**
+  - Labels are sentence case in the interface font.
+  - Panels say what goes in them, with a one-line hint, in place of jargon tags (Sample α, Reagent β, Parameters).
+  - The tabs lose their numbers; the forwarder keeps numbered steps because its order matters.
+  - Middle-dot strings are rewritten as sentences.
+- Ambient loops (flowing gradients, spinning edges, floating icons, the pinging dot, the hover laser) are gone. The crystal is the one thing that moves on its own.
+- A scrim appears behind the tab bar once it sticks, so content doesn't show around it.
+- Data tables have hairline rows, and check icons are outlined.
+
 ### Fixed
 
 - Boot screen: the logo showed a black box behind it and sat off-centre inside the spinning rings. It's now cut out onto a transparent background and centred, with a soft CSS glow.

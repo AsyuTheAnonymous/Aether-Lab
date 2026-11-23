@@ -33,11 +33,11 @@ Aether Lab is five "stations" on one static page:
 
 | Station | What it does |
 | --- | --- |
-| **01 · Patch** | Applies **IPS, IPS32, EBP, BPS, UPS, xdelta (VCDIFF), PPF v1–3 and APS (N64 & GBA)**. Verifies the source ROM, then quietly fixes the usual reasons patches fail — SNES copier headers, iNES headers, N64 byte order, SMD interleave — and can repair header checksums afterwards. |
-| **02 · Create** | Builds **BPS, UPS or IPS** patches from an original and a modified ROM. Every patch is test-applied before you can download it. |
-| **03 · Forwarder** | Forges **installable NSP forwarders** for a homebrewed Switch: a HOME-menu icon that launches a ROM straight into its RetroArch core, or any homebrew `.nro`. Install with Goldleaf, DBI, Tinfoil or sphaira. |
-| **04 · Analyze** | Identifies 20+ systems from their headers, shows CRC32 / MD5 / SHA-1, checks header checksums, strips or adds headers and converts N64 byte order. |
-| **05 · Codex** | A built-in troubleshooting guide. |
+| **Patch** | Applies **IPS, IPS32, EBP, BPS, UPS, xdelta (VCDIFF), PPF v1–3 and APS (N64 & GBA)**. Verifies the source ROM, then quietly fixes the usual reasons patches fail — SNES copier headers, iNES headers, N64 byte order, SMD interleave — and can repair header checksums afterwards. |
+| **Create** | Builds **BPS, UPS or IPS** patches from an original and a modified ROM. Every patch is test-applied before you can download it. |
+| **Forwarder** | Forges **installable NSP forwarders** for a homebrewed Switch: a HOME-menu icon that launches a ROM straight into its RetroArch core, or any homebrew `.nro`. Install with Goldleaf, DBI, Tinfoil or sphaira. |
+| **Analyze** | Identifies 20+ systems from their headers, shows CRC32 / MD5 / SHA-1, checks header checksums, strips or adds headers and converts N64 byte order. |
+| **Codex** | A built-in troubleshooting guide. |
 
 <table>
   <tr>
