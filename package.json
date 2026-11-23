@@ -1,0 +1,13 @@
+{
+  "name": "aether-lab-patcher",
+  "version": "1.0.0",
+  "description": "Aether Lab patcher edition (generated — edit the main branch instead)",
+  "private": true,
+  "license": "MIT",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}
