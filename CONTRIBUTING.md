@@ -46,6 +46,7 @@ There's nothing to install. If you'd rather not use a terminal, you can edit in 
 | Add a RetroArch core preset | `js/nsp/cores.js` |
 | Change the forwarder NSP | `js/nsp/*.js`, [docs/nsp-format.md](docs/nsp-format.md), `tests/nsp.test.js` |
 | Change the look | `css/style.css`, `js/ui/fx.js`; follow [docs/design.md](docs/design.md) |
+| Add anything Switch-only to the page | Wrap it in `edition:switch` markers so the patcher edition leaves it out (see [Editions](docs/architecture.md#editions)) |
 
 ## Code style
 

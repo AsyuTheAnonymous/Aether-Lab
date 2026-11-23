@@ -116,6 +116,26 @@ Each station has one controller (`patch-tab.js`, `create-tab.js`, `forge-tab.js`
 
 Controllers fall back to no-ops if `VF.fx` is missing, so the effects layer can be removed or replaced without touching app logic. Details in [design.md](design.md).
 
+## Editions
+
+The repository is the **full edition**. `tools/build-patcher.js` derives the **patcher edition** from it: the same app without the Switch forwarder station or its code. A workflow (`.github/workflows/patcher-edition.yml`) publishes the patcher edition to the `patcher-site` branch on every push to `main`. There's still only one codebase to change.
+
+In `index.html`:
+
+| Markup | Full edition | Patcher edition |
+| --- | --- | --- |
+| `<!-- edition:switch -->…<!-- /edition:switch -->` | shown as is | removed |
+| `<!-- edition:patcher …html… -->` | an HTML comment (ignored) | un-commented |
+
+Rules:
+
+- Wrap anything Switch-only in `edition:switch` markers: tabs, panels, Codex cards, credits, `<script>` tags. Markers can't be nested. A block can span lines or sit inline within one line.
+- The `edition:patcher` comment is for patcher-only replacements, like the page `<title>`. It has to span several lines, and the HTML inside it can't contain `--`.
+- JavaScript that touches the forwarder from shared code has to check it exists first: `if (VF.forge && $('#panel-forge'))`. `js/app.js` reads the station list from the tabs and numbers them in order. The build renumbers them in the HTML too.
+- Switch-only files are listed in `EXCLUDE` in the build script. New files under `js/nsp/` are excluded automatically.
+
+`tests/edition.test.js` builds the patcher edition and fails if anything Switch-related is left in it, if any referenced file is missing, or if the markers are unbalanced.
+
 ## Security model
 
 - **No network.** The CSP sets `connect-src 'none'` (in the page and again in `.htaccess` / `server.js` / `_headers`). Don't add fetches, CDNs, analytics or web fonts from other hosts.
