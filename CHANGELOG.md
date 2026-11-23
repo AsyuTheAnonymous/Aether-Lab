@@ -7,11 +7,19 @@ Notable changes to Aether Lab are listed here. The format follows [Keep a Change
 ### Added
 
 - **Patcher edition**: Patch, Create, Analyze and the Codex without the Switch forwarder. `tools/build-patcher.js` builds it, and a workflow publishes it to the `patcher-site` branch on every push to `main`.
+- Favicons, home-screen icons and `manifest.webmanifest`, plus a social preview image (`docs/social-preview.jpg`).
 - `.nojekyll`, so GitHub Pages can serve the full edition straight from `main`.
 - Deployment guides for both editions, including switching an existing Hostinger site to the patcher edition.
 
 ### Changed
 
+- **New logo and brand.**
+  - The palette is re-sampled from the logo: cyan through azure, violet and magenta.
+  - The header lockup now matches the logo: chrome AETHER over a spaced LAB.
+  - The boot screen shows the full logo.
+  - The background crystal and the forwarder-icon crystal are redrawn as the logo's two-tone crystal with its orbit ring.
+  - Status colours (ok, warn, bad) stay separate from the brand spectrum.
+- Screenshots updated.
 - Stations are numbered from the tabs on the page, so either edition counts 01, 02, 03… without gaps.
 - Key-related text no longer names or explains a specific key-dumping tool. It just asks for the `prod.keys` from your own console.
 

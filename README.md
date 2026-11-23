@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="images/logo.svg" width="96" height="96" alt="Aether Lab logo">
+<img src="images/logo.webp" width="220" height="220" alt="Aether Lab logo: a cyan and violet crystal circled by an orbit ring">
 
 # Aether Lab
 
@@ -126,7 +126,8 @@ js/patch/           one file per patch format + engine.js (auto-fix logic)
 js/rom/             console detection, headers, checksums, N64 helpers
 js/nsp/             AES, prod.keys, PFS0/RomFS/IVFC, NCA, NACP/NPDM/CNMT, forwarder builder
 js/ui/              one file per station, DOM helpers, icon generator, fx.js (visual effects)
-fonts/ images/      self-hosted fonts and the logo
+fonts/ images/      self-hosted fonts; the logo, header mark, favicons and app icons
+manifest.webmanifest  name and icons for "Add to Home Screen"
 licenses/           licence texts for the fonts and the forwarder ExeFS
 tests/              dependency-free test suite + fixtures made by other tools
 tools/              build-patcher.js: makes the patcher edition (no Switch forwarder)
