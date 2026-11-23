@@ -52,7 +52,7 @@
       const ms = Math.round(performance.now() - t0);
       const name = VF.ui.cleanTitle(state.mod.name).replace(/[\\/:*?"<>|]+/g, '_') + '.' + fmt;
       res.classList.add('result--ok');
-      res.appendChild(el('header', { class: 'card__head' }, el('span', { class: 'tag' }, 'Output'), el('h2', null, fmt.toUpperCase() + ' patch ready')));
+      res.appendChild(el('header', { class: 'card__head' }, el('h2', null, fmt.toUpperCase() + ' patch ready')));
       const nameInput = el('input', { type: 'text', value: name, 'aria-label': 'Patch file name', spellcheck: 'false' });
       const dl = el('button', { class: 'btn btn--ok', type: 'button' }, el('span', null, 'Download'));
       dl.addEventListener('click', () => VF.ui.download(data, nameInput.value.trim() || name));
@@ -83,7 +83,7 @@
       for (const f of VF.patch.creators()) {
         const input = el('input', { type: 'radio', name: 'create-fmt', value: f.id });
         if (f.id === 'bps') input.checked = true;
-        wrap.appendChild(el('label', null, input, el('span', { class: 'fmt' }, el('b', null, f.name + (f.id === 'bps' ? ' · recommended' : '')), el('small', null, f.blurb || ''))));
+        wrap.appendChild(el('label', null, input, el('span', { class: 'fmt' }, el('b', null, f.name, f.id === 'bps' ? el('span', { class: 'fmt__rec' }, 'Recommended') : null), el('small', null, f.blurb || ''))));
         input.addEventListener('change', update);
       }
       VF.ui.bindDrop($('[data-drop="orig"]'), $('#create-orig'), (f) => load('orig', f));

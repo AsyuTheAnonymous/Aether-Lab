@@ -10,17 +10,6 @@
   const { $, $$ } = VF.ui;
   let TABS = [];
 
-  /** Number the stations 01, 02… in the order their tabs appear. */
-  function numberStations() {
-    TABS.forEach((name, i) => {
-      const no = String(i + 1).padStart(2, '0');
-      const tabNo = $('#tab-' + name + ' .tab__no');
-      const kicker = $('#panel-' + name + ' .station-no');
-      if (tabNo) tabNo.textContent = no;
-      if (kicker) kicker.textContent = no;
-    });
-  }
-
   function show(name, focus) {
     if (!TABS.includes(name)) name = 'patch';
     for (const t of TABS) {
@@ -46,10 +35,25 @@
     document.head.appendChild(link);
   }
 
+  /** Darken the strip behind the tab bar once it sticks, so scrolled content doesn't show around it. */
+  function watchStuck() {
+    const bar = $('.tabs');
+    if (!bar) return;
+    let queued = false;
+    const update = () => {
+      queued = false;
+      bar.classList.toggle('is-stuck', bar.getBoundingClientRect().top <= 0 && window.scrollY > 0);
+    };
+    window.addEventListener('scroll', () => {
+      if (!queued) { queued = true; requestAnimationFrame(update); }
+    }, { passive: true });
+    update();
+  }
+
   function init() {
     linkManifest();
+    watchStuck();
     TABS = $$('.tab').map((tab) => tab.dataset.tab);
-    numberStations();
     $$('.tab').forEach((tab) => {
       tab.addEventListener('click', () => show(tab.dataset.tab));
       tab.addEventListener('keydown', (e) => {

@@ -52,21 +52,21 @@
       <span class="brand__mark"><img src="images/mark.webp" alt="" width="54" height="54"></span>
       <span class="brand__text">
         <span class="brand__name"><span class="brand__aether">AETHER</span><span class="brand__lab">LAB</span></span>
-        <span class="brand__tag">Holographic ROM patch lab</span>
+        <span class="brand__tag">ROM patches, made in your browser</span>
       </span>
     </a>
     <p class="seal" title="The page's security policy blocks every network request — nothing you load can be uploaded.">
-      <span class="seal__dot" aria-hidden="true"></span> Sealed lab · nothing leaves this device
+      <span class="seal__dot" aria-hidden="true"></span> Offline: your files never leave this device
     </p>
   </header>
 
   <nav class="tabs" role="tablist" aria-label="Lab stations">
     <div class="tabs__track">
       <span class="tabs__ink" id="tab-ink" aria-hidden="true"></span>
-      <button class="tab" role="tab" id="tab-patch" aria-controls="panel-patch" aria-selected="true" data-tab="patch"><span class="tab__no">01</span>Patch</button>
-      <button class="tab" role="tab" id="tab-create" aria-controls="panel-create" aria-selected="false" data-tab="create"><span class="tab__no">02</span>Create</button>
-      <button class="tab" role="tab" id="tab-tools" aria-controls="panel-tools" aria-selected="false" data-tab="tools"><span class="tab__no">03</span>Analyze</button>
-      <button class="tab" role="tab" id="tab-guide" aria-controls="panel-guide" aria-selected="false" data-tab="guide"><span class="tab__no">04</span>Codex</button>
+      <button class="tab" role="tab" id="tab-patch" aria-controls="panel-patch" aria-selected="true" data-tab="patch">Patch</button>
+      <button class="tab" role="tab" id="tab-create" aria-controls="panel-create" aria-selected="false" data-tab="create">Create</button>
+      <button class="tab" role="tab" id="tab-tools" aria-controls="panel-tools" aria-selected="false" data-tab="tools">Analyze</button>
+      <button class="tab" role="tab" id="tab-guide" aria-controls="panel-guide" aria-selected="false" data-tab="guide">Codex</button>
     </div>
   </nav>
 
@@ -74,19 +74,18 @@
     <!-- ============================ 01 PATCH ============================ -->
     <section class="panel-set" id="panel-patch" role="tabpanel" aria-labelledby="tab-patch">
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">01</span> · Transmutation</p>
-        <h1 class="hero__title">Apply a <span class="iri">ROM hack</span></h1>
+        <h1 class="hero__title">Apply a ROM hack</h1>
         <p class="hero__lede">Load a clean ROM or disc image, then the patch. The lab reads the patch format from the file itself, verifies the source, and quietly corrects the usual culprits — copier headers, iNES headers, N64 byte order, SMD interleave — before it patches.</p>
         <ul class="specs" aria-label="Capabilities">
-          <li>IPS · BPS · UPS · xdelta · PPF · APS</li>
-          <li>Auto header &amp; byte-order repair</li>
-          <li>Checksum-verified output</li>
+          <li>Reads IPS, BPS, UPS, xdelta, PPF and APS</li>
+          <li>Fixes headers and byte order</li>
+          <li>Verifies every checksum</li>
         </ul>
       </div>
 
       <div class="grid grid--2">
         <article class="card" aria-labelledby="slotA-title">
-          <header class="card__head"><span class="tag">Sample α</span><h2 id="slotA-title">ROM / disc image</h2></header>
+          <header class="card__head"><div class="card__titles"><h2 id="slotA-title">ROM or disc image</h2><p class="card__hint">The clean, unpatched game.</p></div></header>
           <label class="drop" data-drop="rom">
             <input type="file" class="visually-hidden" id="patch-rom">
             <span class="drop__corners" aria-hidden="true"></span>
@@ -107,7 +106,7 @@
         </article>
 
         <article class="card" aria-labelledby="slotB-title">
-          <header class="card__head"><span class="tag">Reagent β</span><h2 id="slotB-title">Patch</h2></header>
+          <header class="card__head"><div class="card__titles"><h2 id="slotB-title">Patch file</h2><p class="card__hint">The hack you downloaded.</p></div></header>
           <label class="drop" data-drop="patch">
             <input type="file" class="visually-hidden" id="patch-file">
             <span class="drop__corners" aria-hidden="true"></span>
@@ -120,8 +119,8 @@
         </article>
       </div>
 
-      <article class="card card--wide" aria-labelledby="patch-opts-title">
-        <header class="card__head"><span class="tag">Parameters</span><h2 id="patch-opts-title">Process settings</h2></header>
+      <article class="card card--wide card--quiet" aria-labelledby="patch-opts-title">
+        <header class="card__head"><div class="card__titles"><h2 id="patch-opts-title">Settings</h2><p class="card__hint">The defaults suit almost every hack.</p></div></header>
         <div class="opts">
           <label class="switch"><input type="checkbox" id="opt-autofix" checked><span class="switch__track" aria-hidden="true"></span><span class="switch__text"><b>Auto-fix headers &amp; byte order</b><small>Tries header removal/addition and N64 byte orders until the patch’s checksum matches.</small></span></label>
           <label class="switch"><input type="checkbox" id="opt-fixsum"><span class="switch__track" aria-hidden="true"></span><span class="switch__text"><b>Repair header checksums after patching</b><small>GB/GBC, GBA, SNES, Mega Drive, N64 CRC, NDS. Turn on if the hack won’t boot on hardware or a strict emulator.</small></span></label>
@@ -141,18 +140,17 @@
     <!-- ============================ 02 CREATE ============================ -->
     <section class="panel-set" id="panel-create" role="tabpanel" aria-labelledby="tab-create" hidden>
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">02</span> · Synthesis</p>
-        <h1 class="hero__title">Create a <span class="iri">patch</span></h1>
+        <h1 class="hero__title">Create a patch</h1>
         <p class="hero__lede">Share your hack without sharing the game: compare the original ROM with your modified build and distill the difference into a patch. Every patch is test-applied before you download it.</p>
         <ul class="specs" aria-label="Capabilities">
-          <li>BPS · UPS · IPS</li>
-          <li>Handles moved &amp; inserted data</li>
-          <li>Self-tested before download</li>
+          <li>Makes BPS, UPS and IPS</li>
+          <li>Handles moved and inserted data</li>
+          <li>Tested before download</li>
         </ul>
       </div>
       <div class="grid grid--2">
         <article class="card">
-          <header class="card__head"><span class="tag">Baseline</span><h2>Original ROM</h2></header>
+          <header class="card__head"><div class="card__titles"><h2>Original ROM</h2><p class="card__hint">The clean game players will patch.</p></div></header>
           <label class="drop" data-drop="orig">
             <input type="file" class="visually-hidden" id="create-orig">
             <span class="drop__corners" aria-hidden="true"></span>
@@ -164,7 +162,7 @@
           <div class="readout" id="create-orig-info" hidden></div>
         </article>
         <article class="card">
-          <header class="card__head"><span class="tag">Variant</span><h2>Modified ROM</h2></header>
+          <header class="card__head"><div class="card__titles"><h2>Modified ROM</h2><p class="card__hint">Your edited build.</p></div></header>
           <label class="drop" data-drop="mod">
             <input type="file" class="visually-hidden" id="create-mod">
             <span class="drop__corners" aria-hidden="true"></span>
@@ -177,7 +175,7 @@
         </article>
       </div>
       <article class="card card--wide">
-        <header class="card__head"><span class="tag">Distill</span><h2>Output format</h2></header>
+        <header class="card__head"><div class="card__titles"><h2>Output format</h2><p class="card__hint">BPS is the safest choice for sharing.</p></div></header>
         <div class="formats" role="radiogroup" aria-label="Patch format" id="create-formats"></div>
         <label class="field" id="create-meta-wrap">
           <span>Metadata (BPS only, optional) — credits, version, notes</span>
@@ -195,17 +193,16 @@
     <!-- ============================ 04 ANALYZE ============================ -->
     <section class="panel-set" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">03</span> · Spectroscopy</p>
-        <h1 class="hero__title">Analyze a <span class="iri">ROM</span></h1>
+        <h1 class="hero__title">Analyze a ROM</h1>
         <p class="hero__lede">Identify a ROM, read its fingerprints, check its header checksums, strip or add headers and convert N64 byte order — then save the result.</p>
         <ul class="specs" aria-label="Capabilities">
-          <li>20+ systems detected by header</li>
-          <li>CRC32 · MD5 · SHA-1</li>
-          <li>Header &amp; checksum repair</li>
+          <li>Detects 20+ systems</li>
+          <li>CRC32, MD5 and SHA-1</li>
+          <li>Repairs headers and checksums</li>
         </ul>
       </div>
       <article class="card card--wide">
-        <header class="card__head"><span class="tag">Specimen</span><h2>ROM</h2></header>
+        <header class="card__head"><div class="card__titles"><h2>ROM or disc image</h2><p class="card__hint">Any system. The file stays on this device.</p></div></header>
         <label class="drop" data-drop="lab">
           <input type="file" class="visually-hidden" id="lab-rom">
           <span class="drop__corners" aria-hidden="true"></span>
@@ -222,8 +219,7 @@
     <!-- ============================ 05 CODEX ============================ -->
     <section class="panel-set guide" id="panel-guide" role="tabpanel" aria-labelledby="tab-guide" hidden>
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">04</span> · Reference</p>
-        <h1 class="hero__title">The <span class="iri">Codex</span></h1>
+        <h1 class="hero__title">The Codex</h1>
         <p class="hero__lede">Short answers to the things that go wrong most.</p>
       </div>
       <div class="grid grid--2">
@@ -231,7 +227,7 @@
           <summary><span class="tag">Patching</span><h2>“Wrong source ROM” — what now?</h2></summary>
           <ul>
             <li>BPS, UPS and xdelta know the exact ROM they were made for. If auto-fix can’t find a match, you have a different dump: another region, revision (v1.0 vs v1.1), or a bad dump.</li>
-            <li>Check the hack’s readme for the expected CRC32/MD5/SHA-1 and paste it into Sample α to compare.</li>
+            <li>Check the hack’s readme for the expected CRC32/MD5/SHA-1 and paste it into <b>Compare with a checksum</b> under the ROM on the Patch tab.</li>
             <li>IPS has no checksum, so it will “apply” to anything. If an IPS hack crashes, try the opposite header setting.</li>
           </ul>
         </details>
@@ -274,9 +270,12 @@
   </main>
 
   <footer class="foot">
-    <p class="foot__brand"><span class="iri">AETHER</span> <span class="lite">LAB</span> <span class="foot__sep">·</span> built by Silvea Technologies <span class="foot__sep">·</span> runs offline <span class="foot__sep">·</span> <a href="https://github.com/AsyuTheAnonymous/Aether-Lab" rel="noopener">open source on GitHub</a></p>
+    <div class="foot__brand">
+      <img src="images/mark.webp" alt="" width="32" height="32">
+      <p><b>Aether Lab</b> is built by Silvea Technologies and works offline. <a href="https://github.com/AsyuTheAnonymous/Aether-Lab" rel="noopener">Source on GitHub</a></p>
+    </div>
     <p>Not affiliated with Nintendo, Sega, Sony or any game publisher. Use with games and keys you own.</p>
-    <p class="foot__credits">Fonts: Unbounded, Space Grotesk &amp; JetBrains Mono (SIL OFL).</p>
+    <p class="foot__credits">Fonts: Unbounded, Space Grotesk and JetBrains Mono (SIL OFL).</p>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>

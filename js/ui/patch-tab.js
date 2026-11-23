@@ -13,7 +13,7 @@
   function romCard(info, name, u8) {
     const box = $('#patch-rom-info');
     clear(box).hidden = false;
-    box.appendChild(el('p', { class: 'readout__title' }, el('span', null, info.name), chip(info.id === 'unknown' ? 'generic' : 'detected', info.id === 'unknown' ? 'warn' : 'ok')));
+    box.appendChild(el('p', { class: 'readout__title' }, el('span', null, info.name), chip(info.id === 'unknown' ? 'Generic' : 'Detected', info.id === 'unknown' ? 'warn' : 'ok')));
     box.appendChild(kv(info.rows));
     box.appendChild(VF.ui.hashPanel(u8, (h) => {
       state.romHashes = h;
@@ -42,7 +42,7 @@
   function patchCard(fmt, meta) {
     const box = $('#patch-file-info');
     clear(box).hidden = false;
-    box.appendChild(el('p', { class: 'readout__title' }, el('span', null, fmt.name + ' patch'), chip('valid', 'ok')));
+    box.appendChild(el('p', { class: 'readout__title' }, el('span', null, fmt.name + ' patch'), chip('Valid', 'ok')));
     box.appendChild(kv(meta.rows));
     box.appendChild(el('div', { id: 'patch-match' }));
     refreshMatch();
@@ -129,7 +129,7 @@
       });
       const allOk = r.checks.every((c) => c.ok !== false);
       res.classList.add(allOk ? 'result--ok' : 'result--bad');
-      res.appendChild(el('header', { class: 'card__head' }, el('span', { class: 'tag' }, 'Output'), el('h2', null, allOk ? 'Patched successfully' : 'Patched with warnings')));
+      res.appendChild(el('header', { class: 'card__head' }, el('h2', null, allOk ? 'Patched successfully' : 'Patched with warnings')));
       const nameInput = el('input', { type: 'text', value: r.outputName, 'aria-label': 'Output file name', spellcheck: 'false' });
       const dlBtn = el('button', { class: 'btn btn--ok', type: 'button' }, el('span', null, 'Download'));
       dlBtn.addEventListener('click', () => VF.ui.download(r.output, nameInput.value.trim() || r.outputName));
@@ -144,7 +144,7 @@
 
       // Only in the full edition: the patcher edition ships without the forwarder.
       if (VF.forge && $('#panel-forge')) {
-        const forgeBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Make a Switch forwarder for this hack →');
+        const forgeBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Make a Switch forwarder for this hack');
         forgeBtn.addEventListener('click', () => {
           VF.forge.prefill({ title: VF.ui.cleanTitle(state.patch.name), romName: nameInput.value.trim() || r.outputName, romId: r.outputInfo.id });
           VF.app.show('forge');
@@ -155,7 +155,7 @@
       if (allOk) setTimeout(() => fx.burst(dlBtn), 700);
     } catch (e) {
       res.classList.add('result--bad');
-      res.appendChild(el('header', { class: 'card__head' }, el('span', { class: 'tag' }, 'Halted'), el('h2', null, 'Patch not applied')));
+      res.appendChild(el('header', { class: 'card__head' }, el('h2', null, 'Patch not applied')));
       res.appendChild(el('p', null, e.message));
       if (e.code === 'source-crc' || e.code === 'source-size' || e.code === 'block' || e.code === 'size') {
         res.appendChild(el('ul', { class: 'notes' },
