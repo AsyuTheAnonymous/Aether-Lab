@@ -11,6 +11,10 @@ Notable changes to Aether Lab are listed here. The format follows [Keep a Change
 - `.nojekyll`, so GitHub Pages can serve the full edition straight from `main`.
 - Deployment guides for both editions, including switching an existing Hostinger site to the patcher edition.
 
+### Fixed
+
+- Boot screen: the logo showed a black box behind it and sat off-centre inside the spinning rings. It's now cut out onto a transparent background and centred, with a soft CSS glow.
+
 ### Changed
 
 - **New logo and brand.**

@@ -31,7 +31,7 @@ The logo is the source of the palette and the shapes. All files are in `images/`
 
 | File | Size | Used for |
 | --- | --- | --- |
-| `logo.webp` | 512 px | Boot screen, README |
+| `logo.webp` | 512 px | Boot screen, README. Cut out of its black square onto transparency, with the badge centred and made perfectly round, so it sits concentric with the boot rings on any background. The boot screen adds the outer glow with `drop-shadow` |
 | `mark.webp` | 192 px | Header mark: the crystal and ring without the wordmark |
 | `favicon-16.png`, `favicon-32.png` | 16 / 32 px | Browser tab, tightly cropped on the crystal so it reads at tiny sizes |
 | `apple-touch-icon.png`, `icon-192.png`, `icon-512.png` | 180 / 192 / 512 px | Home-screen icons (`manifest.webmanifest`) |
