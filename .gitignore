@@ -40,3 +40,6 @@ title.keys
 *.cue
 *.chd
 *.bin
+
+# Generated builds (tools/build-patcher.js)
+dist/

@@ -1,0 +1,54 @@
+name: Publish patcher edition
+
+# On every push to main, build the patcher edition (no Switch forwarder) and
+# commit it to the `patcher-site` branch. Point a host at that branch to
+# serve only Patch, Create, Analyze and the Codex. See docs/getting-started.md.
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: patcher-site
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    name: Build and publish
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run the test suite
+        run: npm test
+      - name: Build the patcher edition
+        run: node tools/build-patcher.js dist/patcher
+      - name: Commit it to the patcher-site branch
+        run: |
+          set -euo pipefail
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          # Keep the branch's history linear so hosts that `git pull` it never hit a conflict.
+          if git ls-remote --exit-code --heads origin patcher-site > /dev/null; then
+            git fetch --depth=1 origin patcher-site
+            git worktree add --detach site FETCH_HEAD
+          else
+            git worktree add --detach site
+            git -C site checkout --orphan patcher-site
+            git -C site rm -rfq .
+          fi
+          find site -mindepth 1 -maxdepth 1 ! -name .git -exec rm -rf {} +
+          cp -a dist/patcher/. site/
+          git -C site add -A
+          if git -C site diff --cached --quiet; then
+            echo "Patcher edition unchanged — nothing to publish."
+            exit 0
+          fi
+          git -C site commit -q -m "Patcher edition from ${GITHUB_SHA::7}"
+          git -C site push origin HEAD:refs/heads/patcher-site

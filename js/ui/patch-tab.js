@@ -142,12 +142,15 @@
       res.appendChild(kv([['System', r.outputInfo.name], ['Size', B.formatSize(r.output.length)]]));
       res.appendChild(VF.ui.hashPanel(r.output));
 
-      const forgeBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Make a Switch forwarder for this hack →');
-      forgeBtn.addEventListener('click', () => {
-        VF.forge.prefill({ title: VF.ui.cleanTitle(state.patch.name), romName: nameInput.value.trim() || r.outputName, romId: r.outputInfo.id });
-        VF.app.show('forge');
-      });
-      res.appendChild(el('div', { class: 'actions' }, forgeBtn));
+      // Only in the full edition: the patcher edition ships without the forwarder.
+      if (VF.forge && $('#panel-forge')) {
+        const forgeBtn = el('button', { class: 'btn btn--ghost', type: 'button' }, 'Make a Switch forwarder for this hack →');
+        forgeBtn.addEventListener('click', () => {
+          VF.forge.prefill({ title: VF.ui.cleanTitle(state.patch.name), romName: nameInput.value.trim() || r.outputName, romId: r.outputInfo.id });
+          VF.app.show('forge');
+        });
+        res.appendChild(el('div', { class: 'actions' }, forgeBtn));
+      }
       VF.ui.toast('Patched — ' + r.outputName);
       if (allOk) setTimeout(() => fx.burst(dlBtn), 700);
     } catch (e) {

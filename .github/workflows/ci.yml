@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches-ignore: [patcher-site]  # generated site, no tests to run
   pull_request:
 
 permissions:
@@ -24,6 +25,8 @@ jobs:
         run: find js -name '*.js' -print0 | xargs -0 -n1 node --check
       - name: Run the test suite
         run: npm test
+      - name: Build the patcher edition
+        run: node tools/build-patcher.js dist/patcher
       - name: Smoke-test the static server
         run: |
           node server.js & sleep 1
