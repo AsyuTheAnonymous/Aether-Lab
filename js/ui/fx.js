@@ -192,9 +192,9 @@
     const mobile = small();
     // Narrow screens: beside the brand lockup, clear of the text. Wide: right of the station title.
     const compact = field.w < 900;
-    const size = mobile ? Math.min(field.w * 0.07, 28) : compact ? 32 : Math.min(field.w * 0.065, field.h * 0.1, 96);
+    const size = mobile ? Math.min(field.w * 0.07, 28) : compact ? 32 : Math.min(field.w * 0.06, field.h * 0.088, 88);
     const cx = (mobile ? field.w * 0.82 : compact ? field.w * 0.84 : field.w * 0.83) + pointer.nx * 14;
-    const cy = (compact ? 62 : Math.max(field.h * 0.36, size * 2.2 + 150)) - window.scrollY * 0.12 + pointer.ny * 10;
+    const cy = (compact ? 62 : Math.max(field.h * 0.32, size * 1.6 + 170)) - window.scrollY * 0.12 + pointer.ny * 10;
     if (cy < -size * 3) return;
     const ay = t * 0.32 + pointer.nx * 0.5; // spin about the vertical axis
     const ax = 0.16 + Math.sin(t * 0.4) * 0.05 + pointer.ny * 0.12; // gentle forward tilt
@@ -521,7 +521,7 @@
     }
     const log = document.getElementById('boot-log');
     const bar = document.querySelector('.boot__bar i');
-    const lines = ['Calibrating prism array', 'Loading reagents · IPS BPS UPS xdelta PPF APS', 'Indexing 20+ console signatures', 'Sealing lab · network disabled', 'Lab online'];
+    const lines = ['Calibrating prism array', 'Loading patch formats: IPS, BPS, UPS, xdelta, PPF, APS', 'Indexing 20+ console signatures', 'Sealing the lab: network disabled', 'Lab online'];
     let i = 0;
     let done = false;
     const finish = () => {

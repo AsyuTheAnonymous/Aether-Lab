@@ -32,7 +32,7 @@
     current = { name: file.name, data, info };
     const box = clear($('#lab-info'));
     box.hidden = false;
-    box.appendChild(el('p', { class: 'readout__title' }, el('span', null, info.name), chip(info.id === 'unknown' ? 'generic' : info.id, info.id === 'unknown' ? 'warn' : 'ok')));
+    box.appendChild(el('p', { class: 'readout__title' }, el('span', null, info.name), chip(info.id === 'unknown' ? 'Generic' : info.id.toUpperCase(), info.id === 'unknown' ? 'warn' : 'ok')));
     box.appendChild(kv(info.rows));
     box.appendChild(VF.ui.hashPanel(data));
     const results = info.checksums.map((c) => Object.assign({ label: c.label, id: c.id }, c.check(data)));
