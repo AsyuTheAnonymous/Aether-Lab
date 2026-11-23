@@ -13,6 +13,8 @@ Nintendo Switch NSP forwarders — with nothing uploaded, ever.
 ![No build step](https://img.shields.io/badge/build-none%20needed-5ef2ff.svg)
 ![Network requests](https://img.shields.io/badge/network%20requests-zero-8affc8.svg)
 
+**Try it:** [full edition](https://asyutheanonymous.github.io/Aether-Lab/) · [patcher edition at aether.silvea.tech](https://aether.silvea.tech)
+
 <!--
   Deploy on Hostinger button (Hostinger open-source partner program).
   Replace YOUR_PARTNER_CODE with the code from hPanel, then delete the two comment lines around it.
@@ -63,6 +65,15 @@ npm start            # http://localhost:3000
 
 **Deploy it** — it's a static site, so any web host works. Step-by-step guides for Hostinger (static or Node.js), GitHub Pages and others are in [docs/getting-started.md](docs/getting-started.md).
 
+### Two editions
+
+| Edition | Stations | Get it from |
+| --- | --- | --- |
+| **Full** | All five | This repository (`main`), no build |
+| **Patcher** | Patch, Create, Analyze, Codex: no Switch forwarder | The [`patcher-site`](https://github.com/AsyuTheAnonymous/Aether-Lab/tree/patcher-site) branch, rebuilt automatically from `main` |
+
+Use the patcher edition if you'd rather keep Switch tooling off a particular server. See [getting-started](docs/getting-started.md#two-editions).
+
 ## Supported formats
 
 | Format | Apply | Create | Verifies source | Notes |
@@ -87,7 +98,7 @@ Checksum repair for GB/GBC (header + global), GBA (complement), SNES (internal, 
 
 <img src="docs/screenshots/forwarder.jpg" alt="The forwarder station with keys loaded, a RetroArch target and a generated icon" width="900">
 
-You need a Switch running **Atmosphère with up-to-date signature patches**, and `prod.keys` dumped from **your own console** with Lockpick_RCM. The forwarder points at `sdmc:/retroarch/cores/<core>_libretro_libnx.nro` with your ROM's SD path (or at any homebrew `.nro`), and its title ID is derived the same way sphaira does it — so rebuilding a forwarder updates it instead of creating a duplicate.
+You need a Switch running **Atmosphère with up-to-date signature patches**, and `prod.keys` from **your own console**. The forwarder points at `sdmc:/retroarch/cores/<core>_libretro_libnx.nro` with your ROM's SD path (or at any homebrew `.nro`), and its title ID is derived the same way sphaira does it — so rebuilding a forwarder updates it instead of creating a duplicate.
 
 Everything — requirements, title IDs, icons, installing with Goldleaf and troubleshooting — is in [docs/forwarders.md](docs/forwarders.md).
 
@@ -118,11 +129,13 @@ js/ui/              one file per station, DOM helpers, icon generator, fx.js (vi
 fonts/ images/      self-hosted fonts and the logo
 licenses/           licence texts for the fonts and the forwarder ExeFS
 tests/              dependency-free test suite + fixtures made by other tools
+tools/              build-patcher.js: makes the patcher edition (no Switch forwarder)
 docs/               the guides above
 server.js           optional zero-dependency static server (npm start)
 .htaccess           security headers for Apache / LiteSpeed (Hostinger)
 _headers            the same headers for Netlify / Cloudflare Pages
-.github/            CI workflow, issue and pull request templates
+.github/            CI, the patcher-edition publisher, issue and pull request templates
+.nojekyll           tells GitHub Pages to serve the files as they are
 ```
 
 ## Contributing

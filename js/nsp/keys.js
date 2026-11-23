@@ -1,6 +1,6 @@
 /*
  * Aether Lab — prod.keys parsing
- * Reads the keys file dumped from YOUR console with Lockpick_RCM.
+ * Reads the prod.keys file from the user's own console.
  * Nothing here ever leaves the page: no network calls, no storage.
  * Only header_key is strictly required (forwarders use plaintext sections).
  */
@@ -40,7 +40,7 @@
   function load(text) {
     const map = parse(text);
     const count = Object.keys(map).length;
-    if (!count) throw new Error('That file has no keys in it. Use the prod.keys file that Lockpick_RCM saves to /switch/prod.keys on your SD card.');
+    if (!count) throw new Error('That file has no keys in it. Load the prod.keys file from your own console.');
     const status = [];
     let headerKey = hexKey(map, 'header_key', 32);
     let keyAreaKeyApp0 = hexKey(map, 'key_area_key_application_00', 16);
@@ -58,7 +58,7 @@
       if (headerKey) {
         const ok = B.equal(derived, headerKey);
         status.push({ label: 'header_key', ok, detail: ok ? 'present and cross-checked against master_key_00' : 'does NOT match what master_key_00 derives — this keys file is damaged' });
-        if (!ok) throw new Error('Your prod.keys is inconsistent (header_key doesn’t match master_key_00). Re-dump it with Lockpick_RCM.');
+        if (!ok) throw new Error('Your prod.keys is inconsistent (header_key doesn’t match master_key_00). Get a fresh copy of your console’s keys.');
       } else {
         headerKey = derived;
         status.push({ label: 'header_key', ok: true, detail: 'derived from master_key_00' });
@@ -69,7 +69,7 @@
     } else if (headerKey) {
       status.push({ label: 'header_key', ok: true, detail: 'present (no master_key_00 to cross-check)' });
     }
-    if (!headerKey) throw new Error('header_key is missing from this file. Re-dump your keys with the latest Lockpick_RCM.');
+    if (!headerKey) throw new Error('header_key is missing from this file. Get a fresh, complete copy of your console’s keys.');
     if (B.isZero(headerKey)) throw new Error('header_key is all zeros — that isn’t a real key file.');
 
     status.push({

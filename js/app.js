@@ -1,11 +1,25 @@
 /*
  * Aether Lab — app shell: tab routing and start-up
+ *
+ * The station list comes from the tabs in the page, so an edition built
+ * without the forwarder (tools/build-patcher.js) needs no code changes here.
  */
 (function (VF) {
   'use strict';
 
   const { $, $$ } = VF.ui;
-  const TABS = ['patch', 'create', 'forge', 'tools', 'guide'];
+  let TABS = [];
+
+  /** Number the stations 01, 02… in the order their tabs appear. */
+  function numberStations() {
+    TABS.forEach((name, i) => {
+      const no = String(i + 1).padStart(2, '0');
+      const tabNo = $('#tab-' + name + ' .tab__no');
+      const kicker = $('#panel-' + name + ' .station-no');
+      if (tabNo) tabNo.textContent = no;
+      if (kicker) kicker.textContent = no;
+    });
+  }
 
   function show(name, focus) {
     if (!TABS.includes(name)) name = 'patch';
@@ -24,6 +38,8 @@
   }
 
   function init() {
+    TABS = $$('.tab').map((tab) => tab.dataset.tab);
+    numberStations();
     $$('.tab').forEach((tab) => {
       tab.addEventListener('click', () => show(tab.dataset.tab));
       tab.addEventListener('keydown', (e) => {
@@ -48,7 +64,7 @@
     }
     VF.patchTab.init();
     VF.createTab.init();
-    VF.forge.init();
+    if (VF.forge && $('#panel-forge')) VF.forge.init();
     VF.labTab.init();
     show(location.hash.slice(1) || 'patch');
     // fonts change tab widths — re-seat the sliding indicator once they load

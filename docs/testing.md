@@ -33,6 +33,7 @@ Helpers in `tests/lib.js`:
 | `rom.test.js` | GB, GBA, NDS, Mega Drive, SNES, N64 and NES detection plus checksum repair; SMD de-interleave; N64 byte orders; an N64 boot-CRC snapshot for every CIC |
 | `engine.test.js` | Auto-fix: a patch made for a headerless SNES ROM applies to a headered one; `.z64` patches apply to `.v64`; checksum repair; forcing a mismatched ROM; refusing to create a patch from identical files |
 | `nsp.test.js` | `prod.keys` cross-check; title-ID formula and validation; path normalisation; full RetroArch and plain-NRO forwarder builds re-read by an independent PFS0/NCA reader; template integrity |
+| `edition.test.js` | The patcher edition: no forwarder tab, panel, scripts or credits; stations renumbered; every referenced file shipped; marker mistakes caught |
 
 The interface (`js/ui/`, `js/app.js`) isn't unit-tested. Check it by hand using the list below.
 
@@ -52,15 +53,17 @@ When you add a patch format, add a fixture made by that format's reference tool.
 
 ## Continuous integration
 
-`.github/workflows/ci.yml` runs on every push and pull request, on Node 20 and 22:
+`.github/workflows/ci.yml` runs on every push and pull request (except to the generated `patcher-site` branch), on Node 20 and 22:
 
 1. `node --check` on every file in `js/`, to catch syntax errors in scripts the tests don't load.
 2. `npm test`.
-3. A smoke test that starts `server.js`, checks that the page and a script load, and checks that `package.json` returns 404.
+3. Building the patcher edition (`tools/build-patcher.js`), which also checks the result.
+4. A smoke test that starts `server.js`, checks that the page and a script load, and checks that `package.json` returns 404.
 
 ## Manual checklist for UI changes
 
 - [ ] Load over `npm start` **and** by opening `index.html` directly, with no console errors.
+- [ ] Build the patcher edition (`node tools/build-patcher.js`) and open `dist/patcher/index.html`: four stations, no forwarder button after patching, no console errors.
 - [ ] Patch: drop a ROM and a patch, apply, download. Try a wrong ROM, with and without "force".
 - [ ] Create: make one patch in every format and re-apply each in the Patch station.
 - [ ] Forwarder: build with throwaway or real keys; the verification list is all green.

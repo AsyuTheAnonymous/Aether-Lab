@@ -5,8 +5,14 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
   <meta name="referrer" content="no-referrer">
+  <!-- edition:switch -->
   <title>Aether Lab — Holographic ROM Patcher &amp; Switch Forwarder Forge</title>
   <meta name="description" content="Patch ROM hacks for every console (IPS, BPS, UPS, xdelta, PPF, APS) and forge NSP forwarders for homebrew Switch consoles — entirely in your browser, nothing uploaded.">
+  <!-- /edition:switch -->
+  <!-- edition:patcher
+  <title>Aether Lab — Holographic ROM Patcher</title>
+  <meta name="description" content="Apply and create ROM hack patches for every console (IPS, BPS, UPS, xdelta, PPF, APS) and analyze ROMs — entirely in your browser, nothing uploaded.">
+  -->
   <meta name="theme-color" content="#06050f">
   <link rel="icon" href="images/logo.svg" type="image/svg+xml">
   <link rel="stylesheet" href="css/fonts.css">
@@ -51,7 +57,7 @@
       <span class="brand__mark"><img src="images/logo.svg" alt="" width="46" height="46"></span>
       <span class="brand__text">
         <span class="brand__name"><span class="iri">AETHER</span> <span class="lite">LAB</span></span>
-        <span class="brand__tag">Holographic ROM patch lab · Switch forwarder forge</span>
+        <span class="brand__tag">Holographic ROM patch lab<!-- edition:switch --> · Switch forwarder forge<!-- /edition:switch --></span>
       </span>
     </a>
     <p class="seal" title="The page's security policy blocks every network request — nothing you load can be uploaded.">
@@ -64,7 +70,7 @@
       <span class="tabs__ink" id="tab-ink" aria-hidden="true"></span>
       <button class="tab" role="tab" id="tab-patch" aria-controls="panel-patch" aria-selected="true" data-tab="patch"><span class="tab__no">01</span>Patch</button>
       <button class="tab" role="tab" id="tab-create" aria-controls="panel-create" aria-selected="false" data-tab="create"><span class="tab__no">02</span>Create</button>
-      <button class="tab" role="tab" id="tab-forge" aria-controls="panel-forge" aria-selected="false" data-tab="forge"><span class="tab__no">03</span>Forwarder</button>
+      <!-- edition:switch --><button class="tab" role="tab" id="tab-forge" aria-controls="panel-forge" aria-selected="false" data-tab="forge"><span class="tab__no">03</span>Forwarder</button><!-- /edition:switch -->
       <button class="tab" role="tab" id="tab-tools" aria-controls="panel-tools" aria-selected="false" data-tab="tools"><span class="tab__no">04</span>Analyze</button>
       <button class="tab" role="tab" id="tab-guide" aria-controls="panel-guide" aria-selected="false" data-tab="guide"><span class="tab__no">05</span>Codex</button>
     </div>
@@ -74,7 +80,7 @@
     <!-- ============================ 01 PATCH ============================ -->
     <section class="panel-set" id="panel-patch" role="tabpanel" aria-labelledby="tab-patch">
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station 01 · Transmutation</p>
+        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">01</span> · Transmutation</p>
         <h1 class="hero__title">Apply a <span class="iri">ROM hack</span></h1>
         <p class="hero__lede">Load a clean ROM or disc image, then the patch. The lab reads the patch format from the file itself, verifies the source, and quietly corrects the usual culprits — copier headers, iNES headers, N64 byte order, SMD interleave — before it patches.</p>
         <ul class="specs" aria-label="Capabilities">
@@ -141,7 +147,7 @@
     <!-- ============================ 02 CREATE ============================ -->
     <section class="panel-set" id="panel-create" role="tabpanel" aria-labelledby="tab-create" hidden>
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station 02 · Synthesis</p>
+        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">02</span> · Synthesis</p>
         <h1 class="hero__title">Create a <span class="iri">patch</span></h1>
         <p class="hero__lede">Share your hack without sharing the game: compare the original ROM with your modified build and distill the difference into a patch. Every patch is test-applied before you download it.</p>
         <ul class="specs" aria-label="Capabilities">
@@ -191,10 +197,11 @@
       <article class="card card--wide result" id="create-result" hidden aria-live="polite"></article>
     </section>
 
+    <!-- edition:switch -->
     <!-- ============================ 03 FORWARDER ============================ -->
     <section class="panel-set" id="panel-forge" role="tabpanel" aria-labelledby="tab-forge" hidden>
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station 03 · Crystallize</p>
+        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">03</span> · Crystallize</p>
         <h1 class="hero__title">Forge an <span class="iri">NSP forwarder</span></h1>
         <p class="hero__lede">Crystallize a HOME-menu icon that launches a hack straight into its RetroArch core — or any homebrew .nro — then install it with Goldleaf. Built in this tab with your own keys; nothing is uploaded or saved.</p>
         <ul class="specs" aria-label="Capabilities">
@@ -213,7 +220,7 @@
             <span class="drop__laser" aria-hidden="true"></span>
             <svg class="drop__glyph" aria-hidden="true"><use href="#g-key"/></svg>
             <span class="drop__main">Load <code>prod.keys</code></span>
-            <span class="drop__sub">Dumped from your own Switch with Lockpick_RCM</span>
+            <span class="drop__sub">From your own console — read here, never uploaded</span>
           </label>
           <div class="readout" id="forge-keys-info" hidden></div>
           <p class="note">Held in memory only, for this tab. Close or reload the page and it’s gone.</p>
@@ -313,11 +320,12 @@
       </article>
       <article class="card card--wide result" id="forge-result" hidden aria-live="polite"></article>
     </section>
+    <!-- /edition:switch -->
 
     <!-- ============================ 04 ANALYZE ============================ -->
     <section class="panel-set" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station 04 · Spectroscopy</p>
+        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">04</span> · Spectroscopy</p>
         <h1 class="hero__title">Analyze a <span class="iri">ROM</span></h1>
         <p class="hero__lede">Identify a ROM, read its fingerprints, check its header checksums, strip or add headers and convert N64 byte order — then save the result.</p>
         <ul class="specs" aria-label="Capabilities">
@@ -344,7 +352,7 @@
     <!-- ============================ 05 CODEX ============================ -->
     <section class="panel-set guide" id="panel-guide" role="tabpanel" aria-labelledby="tab-guide" hidden>
       <div class="hero">
-        <p class="hero__kicker"><span class="kicker-line"></span>Station 05 · Reference</p>
+        <p class="hero__kicker"><span class="kicker-line"></span>Station <span class="station-no">05</span> · Reference</p>
         <h1 class="hero__title">The <span class="iri">Codex</span></h1>
         <p class="hero__lede">Short answers to the things that go wrong most.</p>
       </div>
@@ -383,11 +391,12 @@
             <li>PS1 PPF patches normally want the raw .bin from your .cue, not an .iso.</li>
           </ul>
         </details>
+        <!-- edition:switch -->
         <details class="card faq" open>
           <summary><span class="tag">Forwarders</span><h2>What you need on the Switch</h2></summary>
           <ul>
             <li>Atmosphère custom firmware and up-to-date <b>signature patches</b> (sigpatches). Forwarders are signed with a key the console doesn’t trust by default.</li>
-            <li>Keys from the <b>same console and firmware</b>: re-run Lockpick_RCM after every system update.</li>
+            <li>Keys from the <b>same console and firmware</b>: refresh your prod.keys after every system update.</li>
             <li>RetroArch installed: <code>sdmc:/retroarch/cores/…_libretro_libnx.nro</code>. The ROM must sit at the exact SD path you enter.</li>
           </ul>
         </details>
@@ -409,6 +418,7 @@
             <li><b>“?” icon</b> → icon image was unreadable; rebuild with the generated icon.</li>
           </ul>
         </details>
+        <!-- /edition:switch -->
         <details class="card faq">
           <summary><span class="tag">Privacy</span><h2>Where do my files go?</h2></summary>
           <ul>
@@ -424,7 +434,7 @@
   <footer class="foot">
     <p class="foot__brand"><span class="iri">AETHER</span> <span class="lite">LAB</span> <span class="foot__sep">·</span> built by Silvea Technologies <span class="foot__sep">·</span> runs offline <span class="foot__sep">·</span> <a href="https://github.com/AsyuTheAnonymous/Aether-Lab" rel="noopener">open source on GitHub</a></p>
     <p>Not affiliated with Nintendo, Sega, Sony or any game publisher. Use with games and keys you own.</p>
-    <p class="foot__credits">Forwarder ExeFS: nx-hbloader forwarder build (switchbrew, ISC) via TooTallNate/switch-nsp-forwarder · NSP layout follows hacBrewPack · Fonts: Unbounded, Space Grotesk &amp; JetBrains Mono (SIL OFL).</p>
+    <p class="foot__credits"><!-- edition:switch -->Forwarder ExeFS: nx-hbloader forwarder build (switchbrew, ISC) via TooTallNate/switch-nsp-forwarder · NSP layout follows hacBrewPack · <!-- /edition:switch -->Fonts: Unbounded, Space Grotesk &amp; JetBrains Mono (SIL OFL).</p>
   </footer>
 
   <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
@@ -444,6 +454,7 @@
   <script src="js/rom/n64.js"></script>
   <script src="js/rom/consoles.js"></script>
   <script src="js/patch/engine.js"></script>
+  <!-- edition:switch -->
   <!-- switch forwarder -->
   <script src="js/nsp/aes.js"></script>
   <script src="js/nsp/keys.js"></script>
@@ -453,13 +464,14 @@
   <script src="js/nsp/template.js"></script>
   <script src="js/nsp/cores.js"></script>
   <script src="js/nsp/forwarder.js"></script>
+  <!-- /edition:switch -->
   <!-- interface -->
   <script src="js/ui/dom.js"></script>
   <script src="js/ui/fx.js"></script>
-  <script src="js/ui/icon.js"></script>
+  <!-- edition:switch --><script src="js/ui/icon.js"></script><!-- /edition:switch -->
   <script src="js/ui/patch-tab.js"></script>
   <script src="js/ui/create-tab.js"></script>
-  <script src="js/ui/forge-tab.js"></script>
+  <!-- edition:switch --><script src="js/ui/forge-tab.js"></script><!-- /edition:switch -->
   <script src="js/ui/lab-tab.js"></script>
   <script src="js/app.js"></script>
 </body>

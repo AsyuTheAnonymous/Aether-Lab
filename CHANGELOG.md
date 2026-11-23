@@ -4,6 +4,17 @@ Notable changes to Aether Lab are listed here. The format follows [Keep a Change
 
 ## [Unreleased]
 
+### Added
+
+- **Patcher edition**: Patch, Create, Analyze and the Codex without the Switch forwarder. `tools/build-patcher.js` builds it, and a workflow publishes it to the `patcher-site` branch on every push to `main`.
+- `.nojekyll`, so GitHub Pages can serve the full edition straight from `main`.
+- Deployment guides for both editions, including switching an existing Hostinger site to the patcher edition.
+
+### Changed
+
+- Stations are numbered from the tabs on the page, so either edition counts 01, 02, 03… without gaps.
+- Key-related text no longer names or explains a specific key-dumping tool. It just asks for the `prod.keys` from your own console.
+
 ## [1.0.0] — 2026-11-23
 
 The first public release.

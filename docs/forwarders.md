@@ -13,7 +13,7 @@ Aether Lab builds the forwarder's `.nsp` in your browser. You then install it wi
 | --- | --- |
 | A Switch running **Atmosphère** custom firmware | Forwarders are homebrew titles. |
 | **Up-to-date signature patches** (sigpatches) for your firmware | Only Nintendo can sign titles the console trusts by default. Forwarders are signed with a throwaway key, and sigpatches let the console accept them. |
-| **`prod.keys` from your own console**, dumped with Lockpick_RCM | Needed to encrypt the NSP's headers in the format the console expects. Re-dump after every system update. |
+| **`prod.keys` from your own console** | Needed to encrypt the NSP's headers in the format the console expects. Refresh them after every system update. |
 | **RetroArch** (for ROM forwarders) | Cores live at `sdmc:/retroarch/cores/<core>_libretro_libnx.nro`. |
 | An installer: **Goldleaf**, DBI, Tinfoil or sphaira | To install the `.nsp`. |
 
@@ -75,7 +75,7 @@ The full structure is described in [nsp-format.md](nsp-format.md).
 | Symptom | Likely cause |
 | --- | --- |
 | *"The software was closed because an error occurred"* immediately | Sigpatches missing or out of date for your firmware / Atmosphère version. |
-| Installer refuses the NSP | Keys from another console or an older firmware — re-dump with Lockpick_RCM. |
+| Installer refuses the NSP | Keys from another console or an older firmware — refresh your console's `prod.keys`. |
 | Black screen, then back to HOME | Core or ROM path wrong. Paths are case-sensitive. Check both in a file manager on the Switch. |
 | RetroArch opens its menu instead of the game | The ROM path didn't resolve; check spelling and folder. |
 | "?" icon | The image couldn't be decoded. Rebuild with a generated icon. |
