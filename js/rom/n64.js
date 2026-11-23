@@ -79,9 +79,12 @@
 
   const word = (z, i) => ((z[i] << 24) | (z[i + 1] << 16) | (z[i + 2] << 8) | z[i + 3]) >>> 0;
 
-  /** Compute [crc1, crc2] or null if the CIC is unknown / ROM too small. */
-  N.calcCrc = function (z) {
-    const cic = N.cic(z);
+  /**
+   * Compute { cic, crc1, crc2 }, or null if the CIC is unknown / ROM too small.
+   * forceCic (6101/6102/6103/6105/6106) skips boot-code detection — used by tests.
+   */
+  N.calcCrc = function (z, forceCic) {
+    const cic = forceCic || N.cic(z);
     if (!cic || z.length < START + LENGTH) return null;
     const seed = SEED[cic];
     let t1 = seed, t2 = seed, t3 = seed, t4 = seed, t5 = seed, t6 = seed;
