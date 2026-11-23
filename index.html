@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'; img-src 'self' data: blob:; connect-src 'none'; object-src 'none'; base-uri 'none'; form-action 'none'">
+  <meta name="referrer" content="no-referrer">
+  <title>Aether Lab — Holographic ROM Patcher &amp; Switch Forwarder Forge</title>
+  <meta name="description" content="Patch ROM hacks for every console (IPS, BPS, UPS, xdelta, PPF, APS) and forge NSP forwarders for homebrew Switch consoles — entirely in your browser, nothing uploaded.">
+  <meta name="theme-color" content="#06050f">
+  <link rel="icon" href="images/logo.svg" type="image/svg+xml">
+  <link rel="stylesheet" href="css/fonts.css">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="is-booting">
+  <!-- Glyph sprite: referenced with <use href="#g-…"> -->
+  <svg class="sprite" aria-hidden="true" focusable="false">
+    <defs>
+      <linearGradient id="g-spec" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#5ef2ff"/><stop offset=".4" stop-color="#c49bff"/><stop offset=".7" stop-color="#ff8fd8"/><stop offset="1" stop-color="#ffd29a"/>
+      </linearGradient>
+    </defs>
+    <symbol id="g-specimen" viewBox="0 0 48 48"><path d="M24 4 41 14v20L24 44 7 34V14Z" fill="none" stroke="url(#g-spec)" stroke-width="2.2" stroke-linejoin="round"/><path d="M24 14 33 19v10l-9 5-9-5V19Z" fill="url(#g-spec)" opacity=".35"/><circle cx="24" cy="24" r="3" fill="#fff"/></symbol>
+    <symbol id="g-reagent" viewBox="0 0 48 48"><path d="M18 5h12M20 5v13L8 39a3 3 0 0 0 2.6 4.5h26.8A3 3 0 0 0 40 39L28 18V5" fill="none" stroke="url(#g-spec)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/><path d="M13 31h22l4 8a3 3 0 0 1-2.6 4.5H11.6A3 3 0 0 1 9 39Z" fill="url(#g-spec)" opacity=".4"/><circle cx="20" cy="36" r="1.8" fill="#fff"/><circle cx="27" cy="33" r="1.2" fill="#fff"/></symbol>
+    <symbol id="g-variant" viewBox="0 0 48 48"><path d="M24 4 41 14v20L24 44 7 34V14Z" fill="url(#g-spec)" opacity=".25"/><path d="M24 4 41 14v20L24 44 7 34V14Z M7 14l17 10 17-10 M24 24v20" fill="none" stroke="url(#g-spec)" stroke-width="2.2" stroke-linejoin="round"/></symbol>
+    <symbol id="g-key" viewBox="0 0 48 48"><circle cx="16" cy="24" r="8" fill="none" stroke="url(#g-spec)" stroke-width="2.4"/><path d="M24 24h18m-5 0v7m-6-7v5" fill="none" stroke="url(#g-spec)" stroke-width="2.4" stroke-linecap="round"/><circle cx="16" cy="24" r="2.5" fill="#fff"/></symbol>
+    <symbol id="g-chip" viewBox="0 0 48 48"><rect x="12" y="12" width="24" height="24" rx="4" fill="url(#g-spec)" opacity=".3"/><rect x="12" y="12" width="24" height="24" rx="4" fill="none" stroke="url(#g-spec)" stroke-width="2.2"/><path d="M18 6v6m6-6v6m6-6v6M18 36v6m6-6v6m6-6v6M6 18h6m-6 6h6m-6 6h6M36 18h6m-6 6h6m-6 6h6" stroke="url(#g-spec)" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="g-scope" viewBox="0 0 48 48"><circle cx="21" cy="21" r="13" fill="none" stroke="url(#g-spec)" stroke-width="2.4"/><path d="M31 31 42 42" stroke="url(#g-spec)" stroke-width="3" stroke-linecap="round"/><path d="M14 21h14M21 14v14" stroke="#fff" stroke-opacity=".7" stroke-width="1.4"/></symbol>
+  </svg>
+
+  <canvas id="aurora" class="fx-aurora" aria-hidden="true"></canvas>
+  <canvas id="field" class="fx-field" aria-hidden="true"></canvas>
+  <div class="fx-grain" aria-hidden="true"></div>
+  <div class="fx-glow" id="glow" aria-hidden="true"></div>
+  <canvas id="sparks" class="fx-sparks" aria-hidden="true"></canvas>
+
+  <!-- Boot sequence (skipped with reduced motion; click or any key skips it) -->
+  <div class="boot" id="boot" aria-hidden="true">
+    <div class="boot__core">
+      <div class="boot__ring"></div>
+      <div class="boot__ring boot__ring--2"></div>
+      <img src="images/logo.svg" alt="" width="84" height="84">
+    </div>
+    <p class="boot__word"><span class="iri">AETHER</span> <span class="lite">LAB</span></p>
+    <ol class="boot__log" id="boot-log"></ol>
+    <div class="boot__bar"><i></i></div>
+  </div>
+
+  <header class="topbar">
+    <a class="brand" href="#patch" aria-label="Aether Lab home">
+      <span class="brand__mark"><img src="images/logo.svg" alt="" width="46" height="46"></span>
+      <span class="brand__text">
+        <span class="brand__name"><span class="iri">AETHER</span> <span class="lite">LAB</span></span>
+        <span class="brand__tag">Holographic ROM patch lab · Switch forwarder forge</span>
+      </span>
+    </a>
+    <p class="seal" title="The page's security policy blocks every network request — nothing you load can be uploaded.">
+      <span class="seal__dot" aria-hidden="true"></span> Sealed lab · nothing leaves this device
+    </p>
+  </header>
+
+  <nav class="tabs" role="tablist" aria-label="Lab stations">
+    <div class="tabs__track">
+      <span class="tabs__ink" id="tab-ink" aria-hidden="true"></span>
+      <button class="tab" role="tab" id="tab-patch" aria-controls="panel-patch" aria-selected="true" data-tab="patch"><span class="tab__no">01</span>Patch</button>
+      <button class="tab" role="tab" id="tab-create" aria-controls="panel-create" aria-selected="false" data-tab="create"><span class="tab__no">02</span>Create</button>
+      <button class="tab" role="tab" id="tab-forge" aria-controls="panel-forge" aria-selected="false" data-tab="forge"><span class="tab__no">03</span>Forwarder</button>
+      <button class="tab" role="tab" id="tab-tools" aria-controls="panel-tools" aria-selected="false" data-tab="tools"><span class="tab__no">04</span>Analyze</button>
+      <button class="tab" role="tab" id="tab-guide" aria-controls="panel-guide" aria-selected="false" data-tab="guide"><span class="tab__no">05</span>Codex</button>
+    </div>
+  </nav>
+
+  <main>
+    <!-- ============================ 01 PATCH ============================ -->
+    <section class="panel-set" id="panel-patch" role="tabpanel" aria-labelledby="tab-patch">
+      <div class="hero">
+        <p class="hero__kicker"><span class="kicker-line"></span>Station 01 · Transmutation</p>
+        <h1 class="hero__title">Apply a <span class="iri">ROM hack</span></h1>
+        <p class="hero__lede">Load a clean ROM or disc image, then the patch. The lab reads the patch format from the file itself, verifies the source, and quietly corrects the usual culprits — copier headers, iNES headers, N64 byte order, SMD interleave — before it patches.</p>
+        <ul class="specs" aria-label="Capabilities">
+          <li>IPS · BPS · UPS · xdelta · PPF · APS</li>
+          <li>Auto header &amp; byte-order repair</li>
+          <li>Checksum-verified output</li>
+        </ul>
+      </div>
+
+      <div class="grid grid--2">
+        <article class="card" aria-labelledby="slotA-title">
+          <header class="card__head"><span class="tag">Sample α</span><h2 id="slotA-title">ROM / disc image</h2></header>
+          <label class="drop" data-drop="rom">
+            <input type="file" class="visually-hidden" id="patch-rom">
+            <span class="drop__corners" aria-hidden="true"></span>
+            <span class="drop__laser" aria-hidden="true"></span>
+            <svg class="drop__glyph" aria-hidden="true"><use href="#g-specimen"/></svg>
+            <span class="drop__main">Drop ROM here or <u>browse</u></span>
+            <span class="drop__sub">.sfc .smc .nes .gb .gbc .gba .nds .z64 .v64 .md .bin .iso …</span>
+          </label>
+          <div class="readout" id="patch-rom-info" hidden></div>
+          <details class="expect" id="patch-expect" hidden>
+            <summary>Compare with a checksum from the hack’s readme</summary>
+            <label class="field">
+              <span>CRC32, MD5 or SHA-1 of the ROM the hack needs</span>
+              <input type="text" id="patch-expect-input" inputmode="text" autocomplete="off" spellcheck="false" placeholder="e.g. 3d45c1ee">
+            </label>
+            <p class="expect__result" id="patch-expect-result" aria-live="polite"></p>
+          </details>
+        </article>
+
+        <article class="card" aria-labelledby="slotB-title">
+          <header class="card__head"><span class="tag">Reagent β</span><h2 id="slotB-title">Patch</h2></header>
+          <label class="drop" data-drop="patch">
+            <input type="file" class="visually-hidden" id="patch-file">
+            <span class="drop__corners" aria-hidden="true"></span>
+            <span class="drop__laser" aria-hidden="true"></span>
+            <svg class="drop__glyph" aria-hidden="true"><use href="#g-reagent"/></svg>
+            <span class="drop__main">Drop patch here or <u>browse</u></span>
+            <span class="drop__sub">.bps .ips .ups .xdelta .vcdiff .ppf .aps .ebp</span>
+          </label>
+          <div class="readout" id="patch-file-info" hidden></div>
+        </article>
+      </div>
+
+      <article class="card card--wide" aria-labelledby="patch-opts-title">
+        <header class="card__head"><span class="tag">Parameters</span><h2 id="patch-opts-title">Process settings</h2></header>
+        <div class="opts">
+          <label class="switch"><input type="checkbox" id="opt-autofix" checked><span class="switch__track" aria-hidden="true"></span><span class="switch__text"><b>Auto-fix headers &amp; byte order</b><small>Tries header removal/addition and N64 byte orders until the patch’s checksum matches.</small></span></label>
+          <label class="switch"><input type="checkbox" id="opt-fixsum"><span class="switch__track" aria-hidden="true"></span><span class="switch__text"><b>Repair header checksums after patching</b><small>GB/GBC, GBA, SNES, Mega Drive, N64 CRC, NDS. Turn on if the hack won’t boot on hardware or a strict emulator.</small></span></label>
+          <label class="switch"><input type="checkbox" id="opt-remove"><span class="switch__track" aria-hidden="true"></span><span class="switch__text"><b>Remove header first</b><small>Manual override: strip a copier / iNES / A78 / LNX header, or de-interleave SMD.</small></span></label>
+          <label class="switch"><input type="checkbox" id="opt-add"><span class="switch__track" aria-hidden="true"></span><span class="switch__text"><b>Add SNES copier header first</b><small>Only for old IPS hacks that were made against a headered .smc.</small></span></label>
+          <label class="switch switch--warn"><input type="checkbox" id="opt-force"><span class="switch__track" aria-hidden="true"></span><span class="switch__text"><b>Force — ignore failed checks</b><small>Last resort. A mismatched source almost always gives a broken game.</small></span></label>
+        </div>
+        <div class="actions">
+          <button class="btn btn--primary" id="patch-go" disabled><span>Apply patch</span></button>
+          <p class="hint" id="patch-hint">Load a ROM and a patch to begin.</p>
+        </div>
+      </article>
+
+      <article class="card card--wide result" id="patch-result" hidden aria-live="polite"></article>
+    </section>
+
+    <!-- ============================ 02 CREATE ============================ -->
+    <section class="panel-set" id="panel-create" role="tabpanel" aria-labelledby="tab-create" hidden>
+      <div class="hero">
+        <p class="hero__kicker"><span class="kicker-line"></span>Station 02 · Synthesis</p>
+        <h1 class="hero__title">Create a <span class="iri">patch</span></h1>
+        <p class="hero__lede">Share your hack without sharing the game: compare the original ROM with your modified build and distill the difference into a patch. Every patch is test-applied before you download it.</p>
+        <ul class="specs" aria-label="Capabilities">
+          <li>BPS · UPS · IPS</li>
+          <li>Handles moved &amp; inserted data</li>
+          <li>Self-tested before download</li>
+        </ul>
+      </div>
+      <div class="grid grid--2">
+        <article class="card">
+          <header class="card__head"><span class="tag">Baseline</span><h2>Original ROM</h2></header>
+          <label class="drop" data-drop="orig">
+            <input type="file" class="visually-hidden" id="create-orig">
+            <span class="drop__corners" aria-hidden="true"></span>
+            <span class="drop__laser" aria-hidden="true"></span>
+            <svg class="drop__glyph" aria-hidden="true"><use href="#g-specimen"/></svg>
+            <span class="drop__main">Drop the clean ROM or <u>browse</u></span>
+            <span class="drop__sub">The exact file players will patch</span>
+          </label>
+          <div class="readout" id="create-orig-info" hidden></div>
+        </article>
+        <article class="card">
+          <header class="card__head"><span class="tag">Variant</span><h2>Modified ROM</h2></header>
+          <label class="drop" data-drop="mod">
+            <input type="file" class="visually-hidden" id="create-mod">
+            <span class="drop__corners" aria-hidden="true"></span>
+            <span class="drop__laser" aria-hidden="true"></span>
+            <svg class="drop__glyph" aria-hidden="true"><use href="#g-variant"/></svg>
+            <span class="drop__main">Drop your hacked ROM or <u>browse</u></span>
+            <span class="drop__sub">Your edited build</span>
+          </label>
+          <div class="readout" id="create-mod-info" hidden></div>
+        </article>
+      </div>
+      <article class="card card--wide">
+        <header class="card__head"><span class="tag">Distill</span><h2>Output format</h2></header>
+        <div class="formats" role="radiogroup" aria-label="Patch format" id="create-formats"></div>
+        <label class="field" id="create-meta-wrap">
+          <span>Metadata (BPS only, optional) — credits, version, notes</span>
+          <textarea id="create-meta" rows="3" placeholder="My Hack v1.4 — by Ash"></textarea>
+        </label>
+        <div class="actions">
+          <button class="btn btn--primary" id="create-go" disabled><span>Create patch</span></button>
+          <p class="hint" id="create-hint">Load both ROMs to begin.</p>
+        </div>
+      </article>
+      <article class="card card--wide result" id="create-result" hidden aria-live="polite"></article>
+    </section>
+
+    <!-- ============================ 03 FORWARDER ============================ -->
+    <section class="panel-set" id="panel-forge" role="tabpanel" aria-labelledby="tab-forge" hidden>
+      <div class="hero">
+        <p class="hero__kicker"><span class="kicker-line"></span>Station 03 · Crystallize</p>
+        <h1 class="hero__title">Forge an <span class="iri">NSP forwarder</span></h1>
+        <p class="hero__lede">Crystallize a HOME-menu icon that launches a hack straight into its RetroArch core — or any homebrew .nro — then install it with Goldleaf. Built in this tab with your own keys; nothing is uploaded or saved.</p>
+        <ul class="specs" aria-label="Capabilities">
+          <li>Goldleaf · DBI · Tinfoil · sphaira</li>
+          <li>Built on-device</li>
+          <li>Self-verified NSP</li>
+        </ul>
+      </div>
+
+      <div class="grid grid--2">
+        <article class="card" aria-labelledby="keys-title">
+          <header class="card__head"><span class="tag">Phase 1</span><h2 id="keys-title">Your console keys</h2></header>
+          <label class="drop drop--compact" data-drop="keys">
+            <input type="file" class="visually-hidden" id="forge-keys" accept=".keys,.txt,.dat,.ini,text/plain">
+            <span class="drop__corners" aria-hidden="true"></span>
+            <span class="drop__laser" aria-hidden="true"></span>
+            <svg class="drop__glyph" aria-hidden="true"><use href="#g-key"/></svg>
+            <span class="drop__main">Load <code>prod.keys</code></span>
+            <span class="drop__sub">Dumped from your own Switch with Lockpick_RCM</span>
+          </label>
+          <div class="readout" id="forge-keys-info" hidden></div>
+          <p class="note">Held in memory only, for this tab. Close or reload the page and it’s gone.</p>
+        </article>
+
+        <article class="card" aria-labelledby="target-title">
+          <header class="card__head"><span class="tag">Phase 2</span><h2 id="target-title">What it launches</h2></header>
+          <div class="seg" role="radiogroup" aria-label="Forwarder type">
+            <label><input type="radio" name="forge-mode" value="retro" checked><span>RetroArch ROM</span></label>
+            <label><input type="radio" name="forge-mode" value="nro"><span>Homebrew .nro</span></label>
+          </div>
+
+          <div id="forge-retro">
+            <div class="row2">
+              <label class="field"><span>System</span><select id="forge-system"></select></label>
+              <label class="field"><span>Core</span><select id="forge-core"></select></label>
+            </div>
+            <label class="field"><span>Core path on SD</span><input type="text" id="forge-corepath" spellcheck="false" autocomplete="off"></label>
+            <label class="field"><span>ROM path on SD</span><input type="text" id="forge-rompath" spellcheck="false" autocomplete="off" placeholder="sdmc:/roms/snes/My Hack.sfc"></label>
+            <label class="pick"><input type="file" class="visually-hidden" id="forge-rompick"><span>Pick the ROM file to fill in its name</span></label>
+          </div>
+
+          <div id="forge-nro" hidden>
+            <label class="drop drop--compact" data-drop="nro">
+              <input type="file" class="visually-hidden" id="forge-nrofile" accept=".nro">
+              <span class="drop__corners" aria-hidden="true"></span>
+              <span class="drop__laser" aria-hidden="true"></span>
+              <svg class="drop__glyph" aria-hidden="true"><use href="#g-chip"/></svg>
+              <span class="drop__main">Load the .nro (optional)</span>
+              <span class="drop__sub">Reads its name, author, version and icon</span>
+            </label>
+            <label class="field"><span>NRO path on SD</span><input type="text" id="forge-nropath" spellcheck="false" autocomplete="off" placeholder="sdmc:/switch/myapp/myapp.nro"></label>
+            <label class="field"><span>Extra launch arguments (optional)</span><input type="text" id="forge-args" spellcheck="false" autocomplete="off"></label>
+          </div>
+        </article>
+      </div>
+
+      <div class="grid grid--2">
+        <article class="card" aria-labelledby="details-title">
+          <header class="card__head"><span class="tag">Phase 3</span><h2 id="details-title">HOME menu details</h2></header>
+          <label class="field"><span>Title</span><input type="text" id="forge-title" maxlength="200" autocomplete="off" placeholder="My Hack"></label>
+          <div class="row2">
+            <label class="field"><span>Publisher</span><input type="text" id="forge-publisher" maxlength="120" autocomplete="off" placeholder="Hack author"></label>
+            <label class="field"><span>Version</span><input type="text" id="forge-version" maxlength="15" autocomplete="off" value="1.0.0"></label>
+          </div>
+          <label class="field">
+            <span>Title ID</span>
+            <span class="tid">
+              <input type="text" id="forge-tid" spellcheck="false" autocomplete="off" maxlength="16">
+              <select id="forge-tidmode" aria-label="Title ID mode">
+                <option value="auto">Auto (stable)</option>
+                <option value="random">Random</option>
+                <option value="manual">Manual</option>
+              </select>
+            </span>
+            <small class="field__help">Auto uses the same formula as sphaira, so rebuilding a forwarder updates it instead of adding a duplicate.</small>
+          </label>
+          <label class="switch"><input type="checkbox" id="forge-profile"><span class="switch__track" aria-hidden="true"></span><span class="switch__text"><b>Ask for a user profile at launch</b><small>Leave off for RetroArch — it saves to the SD card.</small></span></label>
+        </article>
+
+        <article class="card" aria-labelledby="icon-title">
+          <header class="card__head"><span class="tag">Phase 4</span><h2 id="icon-title">Icon</h2></header>
+          <div class="iconbay">
+            <div class="iconbay__preview">
+              <div class="holo-tile">
+                <canvas id="forge-icon" width="256" height="256" aria-label="Icon preview"></canvas>
+                <span class="holo-tile__foil" aria-hidden="true"></span>
+              </div>
+              <span class="iconbay__label">256 × 256 JPEG</span>
+            </div>
+            <div class="iconbay__controls">
+              <label class="pick pick--block"><input type="file" class="visually-hidden" id="forge-iconfile" accept="image/*"><span>Use an image (boxart, title screen…)</span></label>
+              <div class="seg seg--small" role="radiogroup" aria-label="Image fit">
+                <label><input type="radio" name="forge-fit" value="cover" checked><span>Fill</span></label>
+                <label><input type="radio" name="forge-fit" value="contain"><span>Fit</span></label>
+              </div>
+              <label class="field"><span>Generated icon style</span>
+                <select id="forge-iconstyle">
+                  <option value="prism">Prism</option>
+                  <option value="hologram">Hologram</option>
+                  <option value="aurora">Aurora</option>
+                </select>
+              </label>
+              <button class="btn btn--ghost" id="forge-icon-reset" type="button">Use generated icon</button>
+            </div>
+          </div>
+        </article>
+      </div>
+
+      <article class="card card--wide">
+        <header class="card__head"><span class="tag">Phase 5</span><h2>Crystallize</h2></header>
+        <div class="summary" id="forge-summary"></div>
+        <div class="actions">
+          <button class="btn btn--primary" id="forge-go" disabled><span>Forge NSP</span></button>
+          <p class="hint" id="forge-hint">Load your prod.keys to begin.</p>
+        </div>
+      </article>
+      <article class="card card--wide result" id="forge-result" hidden aria-live="polite"></article>
+    </section>
+
+    <!-- ============================ 04 ANALYZE ============================ -->
+    <section class="panel-set" id="panel-tools" role="tabpanel" aria-labelledby="tab-tools" hidden>
+      <div class="hero">
+        <p class="hero__kicker"><span class="kicker-line"></span>Station 04 · Spectroscopy</p>
+        <h1 class="hero__title">Analyze a <span class="iri">ROM</span></h1>
+        <p class="hero__lede">Identify a ROM, read its fingerprints, check its header checksums, strip or add headers and convert N64 byte order — then save the result.</p>
+        <ul class="specs" aria-label="Capabilities">
+          <li>20+ systems detected by header</li>
+          <li>CRC32 · MD5 · SHA-1</li>
+          <li>Header &amp; checksum repair</li>
+        </ul>
+      </div>
+      <article class="card card--wide">
+        <header class="card__head"><span class="tag">Specimen</span><h2>ROM</h2></header>
+        <label class="drop" data-drop="lab">
+          <input type="file" class="visually-hidden" id="lab-rom">
+          <span class="drop__corners" aria-hidden="true"></span>
+          <span class="drop__laser" aria-hidden="true"></span>
+          <svg class="drop__glyph" aria-hidden="true"><use href="#g-scope"/></svg>
+          <span class="drop__main">Drop a ROM or disc image or <u>browse</u></span>
+          <span class="drop__sub">Nothing is uploaded — analysis runs on this device</span>
+        </label>
+        <div class="readout" id="lab-info" hidden></div>
+        <div class="labops" id="lab-ops" hidden></div>
+      </article>
+    </section>
+
+    <!-- ============================ 05 CODEX ============================ -->
+    <section class="panel-set guide" id="panel-guide" role="tabpanel" aria-labelledby="tab-guide" hidden>
+      <div class="hero">
+        <p class="hero__kicker"><span class="kicker-line"></span>Station 05 · Reference</p>
+        <h1 class="hero__title">The <span class="iri">Codex</span></h1>
+        <p class="hero__lede">Short answers to the things that go wrong most.</p>
+      </div>
+      <div class="grid grid--2">
+        <details class="card faq" open>
+          <summary><span class="tag">Patching</span><h2>“Wrong source ROM” — what now?</h2></summary>
+          <ul>
+            <li>BPS, UPS and xdelta know the exact ROM they were made for. If auto-fix can’t find a match, you have a different dump: another region, revision (v1.0 vs v1.1), or a bad dump.</li>
+            <li>Check the hack’s readme for the expected CRC32/MD5/SHA-1 and paste it into Sample α to compare.</li>
+            <li>IPS has no checksum, so it will “apply” to anything. If an IPS hack crashes, try the opposite header setting.</li>
+          </ul>
+        </details>
+        <details class="card faq" open>
+          <summary><span class="tag">Patching</span><h2>Headered vs headerless</h2></summary>
+          <ul>
+            <li><b>SNES:</b> a 512-byte copier header (file size ends in …512). Modern hacks want it removed — auto-fix handles it.</li>
+            <li><b>NES:</b> the 16-byte iNES header is normally <i>kept</i>; patches are made with it.</li>
+            <li><b>N64:</b> patches expect .z64 order. .v64/.n64 are converted automatically for checksummed patches.</li>
+            <li><b>Mega Drive:</b> .smd files are interleaved; use “Remove header” to get a plain .bin.</li>
+          </ul>
+        </details>
+        <details class="card faq">
+          <summary><span class="tag">Patching</span><h2>Which format should I share hacks in?</h2></summary>
+          <ul>
+            <li><b>BPS</b> — the default choice: checksummed, any size, compact even when data moves.</li>
+            <li><b>UPS</b> — checksummed and reversible; fine for GBA.</li>
+            <li><b>IPS</b> — only when a tool demands it. Max 16 MB and no checksum.</li>
+            <li><b>xdelta</b> — big disc images (PS1/PS2/GameCube). Create those with xdelta3 using <code>-S none</code> so browser patchers can apply them.</li>
+          </ul>
+        </details>
+        <details class="card faq">
+          <summary><span class="tag">Patching</span><h2>Big disc images</h2></summary>
+          <ul>
+            <li>Everything happens in memory, so files of about 2 GB are the practical ceiling in most browsers (desktop Chrome / Firefox do best).</li>
+            <li>Convert .chd/.rvz/.wbfs/.cso to a plain image first; patch; then re-compress if you like.</li>
+            <li>PS1 PPF patches normally want the raw .bin from your .cue, not an .iso.</li>
+          </ul>
+        </details>
+        <details class="card faq" open>
+          <summary><span class="tag">Forwarders</span><h2>What you need on the Switch</h2></summary>
+          <ul>
+            <li>Atmosphère custom firmware and up-to-date <b>signature patches</b> (sigpatches). Forwarders are signed with a key the console doesn’t trust by default.</li>
+            <li>Keys from the <b>same console and firmware</b>: re-run Lockpick_RCM after every system update.</li>
+            <li>RetroArch installed: <code>sdmc:/retroarch/cores/…_libretro_libnx.nro</code>. The ROM must sit at the exact SD path you enter.</li>
+          </ul>
+        </details>
+        <details class="card faq" open>
+          <summary><span class="tag">Forwarders</span><h2>Installing with Goldleaf</h2></summary>
+          <ol>
+            <li>Copy the .nsp anywhere on the SD card (or keep it on your PC for Quark/USB).</li>
+            <li>Open Goldleaf → <b>Explore content</b> → <b>SD card</b> (or <b>Remote PC</b>).</li>
+            <li>Select the .nsp → <b>Install</b> → choose SD card storage.</li>
+            <li>The icon appears on HOME. Rebuilding with the same Auto title ID replaces it.</li>
+          </ol>
+        </details>
+        <details class="card faq">
+          <summary><span class="tag">Forwarders</span><h2>Troubleshooting</h2></summary>
+          <ul>
+            <li><b>“The software was closed because an error occurred”</b> right at launch → sigpatches missing or out of date for your firmware.</li>
+            <li><b>Install fails</b> → keys are from another console or an older firmware. Re-dump them.</li>
+            <li><b>Black screen / back to HOME</b> → the core or ROM path is wrong. Paths are case-sensitive; check them in a file manager.</li>
+            <li><b>“?” icon</b> → icon image was unreadable; rebuild with the generated icon.</li>
+          </ul>
+        </details>
+        <details class="card faq">
+          <summary><span class="tag">Privacy</span><h2>Where do my files go?</h2></summary>
+          <ul>
+            <li>Nowhere. The page’s security policy blocks every network request (<code>connect-src 'none'</code>), so even a bug couldn’t upload anything.</li>
+            <li>Keys, ROMs and patches live only in this tab’s memory and are released when you close it.</li>
+            <li>Use this with games and keys you own.</li>
+          </ul>
+        </details>
+      </div>
+    </section>
+  </main>
+
+  <footer class="foot">
+    <p class="foot__brand"><span class="iri">AETHER</span> <span class="lite">LAB</span> <span class="foot__sep">·</span> built by Silvea Technologies <span class="foot__sep">·</span> runs offline</p>
+    <p>Not affiliated with Nintendo, Sega, Sony or any game publisher. Use with games and keys you own.</p>
+    <p class="foot__credits">Forwarder ExeFS: nx-hbloader forwarder build (switchbrew, ISC) via TooTallNate/switch-nsp-forwarder · NSP layout follows hacBrewPack · Fonts: Unbounded, Space Grotesk &amp; JetBrains Mono (SIL OFL).</p>
+  </footer>
+
+  <div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+  <!-- core -->
+  <script src="js/core/bytes.js"></script>
+  <script src="js/core/hash.js"></script>
+  <!-- patch formats -->
+  <script src="js/patch/registry.js"></script>
+  <script src="js/patch/bps.js"></script>
+  <script src="js/patch/ips.js"></script>
+  <script src="js/patch/ups.js"></script>
+  <script src="js/patch/vcdiff.js"></script>
+  <script src="js/patch/ppf.js"></script>
+  <script src="js/patch/aps.js"></script>
+  <!-- consoles -->
+  <script src="js/rom/n64.js"></script>
+  <script src="js/rom/consoles.js"></script>
+  <script src="js/patch/engine.js"></script>
+  <!-- switch forwarder -->
+  <script src="js/nsp/aes.js"></script>
+  <script src="js/nsp/keys.js"></script>
+  <script src="js/nsp/fs.js"></script>
+  <script src="js/nsp/meta.js"></script>
+  <script src="js/nsp/nca.js"></script>
+  <script src="js/nsp/template.js"></script>
+  <script src="js/nsp/cores.js"></script>
+  <script src="js/nsp/forwarder.js"></script>
+  <!-- interface -->
+  <script src="js/ui/dom.js"></script>
+  <script src="js/ui/fx.js"></script>
+  <script src="js/ui/icon.js"></script>
+  <script src="js/ui/patch-tab.js"></script>
+  <script src="js/ui/create-tab.js"></script>
+  <script src="js/ui/forge-tab.js"></script>
+  <script src="js/ui/lab-tab.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
