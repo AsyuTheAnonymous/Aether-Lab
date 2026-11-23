@@ -22,7 +22,7 @@ const HOST = process.env.HOST || '0.0.0.0';
 
 // Only these are part of the website. Docs, tests and repo files are not served.
 const PUBLIC_DIRS = new Set(['css', 'js', 'fonts', 'images', 'licenses']);
-const PUBLIC_FILES = new Set(['index.html', 'LICENSE']);
+const PUBLIC_FILES = new Set(['index.html', 'manifest.webmanifest', 'LICENSE']);
 
 const TYPES = {
   '.html': 'text/html; charset=utf-8',
@@ -31,6 +31,8 @@ const TYPES = {
   '.svg': 'image/svg+xml',
   '.png': 'image/png',
   '.jpg': 'image/jpeg',
+  '.webp': 'image/webp',
+  '.webmanifest': 'application/manifest+json',
   '.woff2': 'font/woff2',
   '.txt': 'text/plain; charset=utf-8',
   '': 'text/plain; charset=utf-8',

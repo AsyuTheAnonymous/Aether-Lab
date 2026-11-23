@@ -13,6 +13,8 @@
 
 AddType font/woff2 .woff2
 AddType image/svg+xml .svg
+AddType image/webp .webp
+AddType application/manifest+json .webmanifest
 
 # Don't list folders
 Options -Indexes

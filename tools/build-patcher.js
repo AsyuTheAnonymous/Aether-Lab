@@ -23,7 +23,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 
 /** Top-level files and folders the site needs. Everything else stays out. */
-const INCLUDE = ['index.html', 'css', 'fonts', 'images', 'js', 'licenses', 'LICENSE', '.htaccess', '_headers', 'server.js'];
+const INCLUDE = ['index.html', 'manifest.webmanifest', 'css', 'fonts', 'images', 'js', 'licenses', 'LICENSE', '.htaccess', '_headers', 'server.js'];
 
 /** Switch-only files, relative to the repo root. Folders end with '/'. */
 const EXCLUDE = ['js/nsp/', 'js/ui/forge-tab.js', 'js/ui/icon.js', 'licenses/nx-hbloader-ISC.txt'];

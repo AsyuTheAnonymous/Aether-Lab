@@ -14,15 +14,31 @@ Defined on `:root` in `css/style.css`.
 | `--glass`, `--glass-solid` | translucent / `#120f2c` | Card fill; the solid one is the no-blur fallback |
 | `--edge`, `--edge-hi` | white at 10% / 22% | Hairlines, hover edges |
 | `--text`, `--dim`, `--faint` | `#f3f1ff`, `#aeaad6`, `#716d9f` | Body, secondary, tertiary text |
-| `--c1` … `--c6` | cyan, periwinkle, lavender, pink, peach, mint | The spectrum: every gradient, glow and highlight is drawn from these six |
+| `--c1` … `--c6` | cyan `#3cf2ff`, azure `#2aa8ff`, indigo `#6f6bff`, violet `#9a4dff`, magenta `#d35bff`, orchid `#f08cff` | The spectrum, sampled from the logo: every gradient, glow and highlight is drawn from these six |
+| `--chrome` | white → ice blue → lilac | The silver of the logo's AETHER wordmark |
 | `--spectrum`, `--spectrum-conic` | gradients built from `--c1…--c6` | Foil buttons, card edges, wordmark |
-| `--ok`, `--bad`, `--warn` | mint, rose, peach | Check results — always paired with an icon or word, never colour alone |
+| `--ok`, `--bad`, `--warn` | mint, rose, peach | Check results, always paired with an icon or word, never colour alone. They're deliberately outside the brand spectrum so a status never looks like decoration |
 | `--display`, `--ui`, `--mono` | Unbounded, Space Grotesk, JetBrains Mono | Headings/wordmark, interface, data (hashes, offsets, IDs) |
 | `--r-lg`, `--r-md`, `--r-sm` | 24 / 14 / 10 px | Card, control, chip radii |
 | `--gap` | `clamp(14px, 2.4vw, 24px)` | Fluid spacing |
 | `--ease` | `cubic-bezier(0.2, 0.8, 0.2, 1)` | Every transition |
 
 The fonts are self-hosted WOFF2 files (Latin subset) under the SIL Open Font License. Their licences are in `licenses/`. Don't swap them for a font CDN, because the content security policy blocks other hosts by design.
+
+## Brand assets
+
+The logo is the source of the palette and the shapes. All files are in `images/`:
+
+| File | Size | Used for |
+| --- | --- | --- |
+| `logo.webp` | 512 px | Boot screen, README |
+| `mark.webp` | 192 px | Header mark: the crystal and ring without the wordmark |
+| `favicon-16.png`, `favicon-32.png` | 16 / 32 px | Browser tab, tightly cropped on the crystal so it reads at tiny sizes |
+| `apple-touch-icon.png`, `icon-192.png`, `icon-512.png` | 180 / 192 / 512 px | Home-screen icons (`manifest.webmanifest`) |
+
+`docs/social-preview.jpg` (1280 × 640) is the repository's social card. Upload it under the repo's **Settings → General → Social preview**.
+
+The header wordmark is live text, not an image: **AETHER** in `--chrome` over a spaced **LAB** between two rule lines, the same lockup as the logo. The background crystal (`fx.js`) and the forwarder icons' crystal (`icon.js`) are drawn in code to the same design: an elongated square bipyramid, cyan facets on the left and violet on the right, a tilted orbit ring passing in front of its lower half, and four-point flares.
 
 ## Layers
 
@@ -32,7 +48,7 @@ From back to front:
 | --- | --- | --- | --- |
 | Background | `html` background | — | On `html`, not `body`, so the negative-z canvases show through a transparent body |
 | Aurora | `canvas#aurora` | −3 | Six soft ribbons drawn on a tiny canvas and scaled up; blurred with `ctx.filter`, or a CSS blur where unsupported |
-| Field | `canvas#field` | −2 | The rotating prism crystal and drifting motes; follows the pointer slightly |
+| Field | `canvas#field` | −2 | The logo's crystal (cyan left, violet right) turning inside its orbit ring, plus drifting motes; follows the pointer slightly |
 | Glow | `#glow` | −1 | Soft spotlight that follows the pointer (fine pointers only) |
 | Content | stations, cards | auto | Frosted glass via `backdrop-filter` |
 | Sparks | `canvas#sparks` | 90 | Overlay for success bursts, so shards fly over cards |
