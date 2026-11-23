@@ -135,7 +135,13 @@ b, strong { color: #fff; font-weight: 600; }
 }
 body:not(.is-booting) .boot { opacity: 0; visibility: hidden; }
 .boot__core { position: relative; width: 236px; height: 236px; display: grid; place-items: center; }
-.boot__core img { position: relative; width: 196px; height: 196px; border-radius: 50%; box-shadow: 0 0 60px -6px rgba(60, 242, 255, 0.45), 0 0 90px -10px rgba(211, 91, 255, 0.5); animation: boot-pop 0.9s var(--ease) both; }
+/* logo.webp is cut out with its own glow on a transparent background, badge centred, so it sits
+   concentric with the spinning rings on any backdrop */
+.boot__core img {
+  position: relative; display: block; width: 208px; height: 208px;
+  filter: drop-shadow(0 0 10px rgba(60, 242, 255, 0.35)) drop-shadow(0 0 22px rgba(154, 77, 255, 0.4));
+  animation: boot-pop 0.9s var(--ease) both;
+}
 .boot__ring {
   position: absolute; inset: 0; border-radius: 50%;
   background: var(--spectrum-conic);
