@@ -1,0 +1,14 @@
+{
+  "name": "Aether Lab",
+  "short_name": "Aether Lab",
+  "description": "Holographic ROM patch lab: apply, create and analyze ROM hack patches in your browser. Nothing is uploaded.",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#06050f",
+  "theme_color": "#06050f",
+  "icons": [
+    { "src": "images/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "images/icon-512.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
